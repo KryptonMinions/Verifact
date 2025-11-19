@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "VeriFact Misinformation Reporter",
+  "version": "1.2",
+  "description": "Select an area of the screen to send for analysis.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "contextMenus",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "*://*.your-api-domain.com/"
+  ],
+  "action": {
+    "default_title": "VeriFact Reporter"
+  },
+  "icons": {
+    "128": "icons/icon.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  }
+}
