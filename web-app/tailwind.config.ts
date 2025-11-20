@@ -1,4 +1,4 @@
-import type {Config} from 'tailwindcss';
+import type { Config } from 'tailwindcss';
 
 export default {
   darkMode: ['class'],
@@ -65,6 +65,18 @@ export default {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+        // Cyberpunk Theme Colors
+        neon: {
+          blue: '#00f3ff',
+          pink: '#ff00ff',
+          yellow: '#ffe600',
+        },
+        dark: {
+          bg: '#0a0a0f',
+        },
+      },
+      backgroundImage: {
+        'glass-gradient': 'linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%)',
       },
       borderRadius: {
         lg: 'var(--radius)',

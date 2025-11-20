@@ -30,8 +30,8 @@ import {
 } from '@/components/ui/dialog';
 
 export const metadata: Metadata = {
-    title: 'VeriFact',
-    description: 'AI-powered misinformation detection and content analysis.',
+  title: 'VeriFact',
+  description: 'AI-powered misinformation detection and content analysis.',
 };
 
 export default async function RootLayout({
@@ -39,11 +39,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = cookies();
-  const supabase = createServerClient(cookieStore);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+
+  try {
+    const cookieStore = await cookies();
+    const supabase = createServerClient(cookieStore);
+    const result = await supabase.auth.getUser();
+    user = result.data.user;
+  } catch (error) {
+    console.warn('Supabase not configured, running without authentication');
+  }
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -76,26 +81,26 @@ export default async function RootLayout({
             <SidebarContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                        <Link href="/">
-                            <Search />
-                            Analyze
-                        </Link>
-                    </SidebarMenuButton>
+                  <SidebarMenuButton asChild>
+                    <Link href="/">
+                      <Search />
+                      Analyze
+                    </Link>
+                  </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <Link href="/dashboard">
-                        <LayoutDashboard />
-                        Dashboard
+                      <LayoutDashboard />
+                      Dashboard
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <Link href="/trends">
-                        <TrendingUp />
-                        Trends
+                      <TrendingUp />
+                      Trends
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -109,7 +114,7 @@ export default async function RootLayout({
           </Sidebar>
           <SidebarInset>
             <header className="flex h-14 items-center justify-end border-b bg-background px-6">
-            {user ? (
+              {user ? (
                 <UserNav user={user} />
               ) : (
                 <Dialog>
