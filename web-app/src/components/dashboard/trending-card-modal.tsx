@@ -4,12 +4,14 @@ import {
     Dialog,
     DialogContent,
     DialogHeader,
+    DialogTitle,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { X, ExternalLink } from 'lucide-react';
+import { X, ExternalLink, Download } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AnalysisDataView } from './analysis-data-view';
+import { generateAnalysisReportPDF } from '@/utils/pdf-generator';
 
 interface TrendingCardModalProps {
     trend: any;
@@ -67,6 +69,16 @@ export function TrendingCardModal({ trend, onClose }: TrendingCardModalProps) {
                     "p-0"
                 )}
             >
+                {/* Download PDF Button */}
+                <button
+                    onClick={() => generateAnalysisReportPDF(trend, summary)}
+                    className="absolute right-16 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none z-10 flex items-center gap-2 px-3 py-2 bg-neon-blue/20 hover:bg-neon-blue/30 border border-neon-blue/50 text-neon-blue"
+                    title="Download PDF Report"
+                >
+                    <Download className="h-4 w-4" />
+                    <span className="text-xs font-medium">PDF</span>
+                </button>
+
                 {/* Close Button */}
                 <button
                     onClick={onClose}
@@ -97,9 +109,9 @@ export function TrendingCardModal({ trend, onClose }: TrendingCardModalProps) {
                         </div>
                     </div>
 
-                    <h2 className="text-3xl font-bold leading-tight tracking-tight text-gray-100 pr-8">
+                    <DialogTitle className="text-3xl font-bold leading-tight tracking-tight text-gray-100 pr-8">
                         {firstClaimText}
-                    </h2>
+                    </DialogTitle>
 
                     <div className="flex items-center gap-2 text-sm text-gray-400 font-mono">
                         <ExternalLink className="w-4 h-4" />
