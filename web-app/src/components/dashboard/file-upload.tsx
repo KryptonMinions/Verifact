@@ -4,13 +4,13 @@
 import { UploadCloud, X } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useRef, useState, useEffect } from 'react';
-import { ImagePreview } from './image-preview';
+import { FilePreview } from './file-preview';
 import { cn } from '@/lib/utils';
 
 type FileUploadProps = {
-    file: File | null;
-    setFile: (file: File | null, sourceUrl?: string) => void;
-    name: string;
+  file: File | null;
+  setFile: (file: File | null, sourceUrl?: string) => void;
+  name: string;
 };
 
 export function FileUpload({ file, setFile, name }: FileUploadProps) {
@@ -24,7 +24,7 @@ export function FileUpload({ file, setFile, name }: FileUploadProps) {
       dataTransferRef.current.items.add(file);
     }
     if (fileInputRef.current) {
-        fileInputRef.current.files = dataTransferRef.current.files;
+      fileInputRef.current.files = dataTransferRef.current.files;
     }
   }, [file]);
 
@@ -45,7 +45,8 @@ export function FileUpload({ file, setFile, name }: FileUploadProps) {
     const items = event.clipboardData?.items;
     if (items) {
       for (let i = 0; i < items.length; i++) {
-        if (items[i].type.indexOf('image') !== -1) {
+        const itemType = items[i].type;
+        if (itemType.indexOf('image') !== -1 || itemType.indexOf('audio') !== -1 || itemType.indexOf('video') !== -1) {
           const pastedFile = items[i].getAsFile();
           if (pastedFile) {
             const sourceUrl = event.clipboardData.getData('text/html').match(/src="([^"]+)"/)?.[1];
@@ -87,7 +88,7 @@ export function FileUpload({ file, setFile, name }: FileUploadProps) {
     <div className="mt-2">
       {file ? (
         <div className="relative group">
-          <ImagePreview file={file} />
+          <FilePreview file={file} />
           <Button
             variant="destructive"
             size="icon"
@@ -115,7 +116,7 @@ export function FileUpload({ file, setFile, name }: FileUploadProps) {
               <span className={cn("transition-colors", isDragging ? 'text-primary' : 'text-primary')}>Select File</span>, paste, or drag and drop
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Images (JPEG, PNG, WEBP)
+              Images, Audio & Video files
             </p>
           </div>
         </div>
@@ -125,7 +126,7 @@ export function FileUpload({ file, setFile, name }: FileUploadProps) {
         ref={fileInputRef}
         className="hidden"
         onChange={handleFileChange}
-        accept="image/jpeg,image/png,image/webp"
+        accept="image/jpeg,image/png,image/webp,audio/mpeg,audio/wav,audio/mp3,audio/mp4,audio/ogg,video/mp4,video/webm,video/quicktime,video/x-msvideo"
         name={name}
       />
     </div>

@@ -8,20 +8,20 @@ import type { AnalysisResult } from '@/types';
 const formSchema = z.object({
   text: z.string().optional(),
   url: z.string().url().optional().or(z.literal('')),
-  image: z.any().optional(),
+  media: z.any().optional(),
 });
 
 export async function handleTextAnalysis(
   prevState: any,
   formData: FormData
 ): Promise<{ result: AnalysisResult | null; error: string | null }> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const supabase = createServerClient(cookieStore);
 
   const rawFormData = {
     text: formData.get('text'),
     url: formData.get('url'),
-    image: formData.get('image'),
+    media: formData.get('media'),
   };
 
   const validatedFields = formSchema.safeParse(rawFormData);
@@ -33,13 +33,13 @@ export async function handleTextAnalysis(
     };
   }
 
-  const { text, url, image } = validatedFields.data;
+  const { text, url, media } = validatedFields.data;
   const claimToTest = [text, url].filter(Boolean).join(' ');
 
-  if (!claimToTest && (!image || image.size === 0)) {
+  if (!claimToTest && (!media || media.size === 0)) {
     return {
       result: null,
-      error: 'Please provide text, a URL, or an image to analyze.',
+      error: 'Please provide text, a URL, or a media file to analyze.',
     };
   }
 
@@ -55,10 +55,14 @@ export async function handleTextAnalysis(
 
   try {
     const apiFormData = new FormData();
-    apiFormData.append('text', claimToTest);
 
-    if (image && image.size > 0) {
-        apiFormData.append('image', image);
+    // Only append text if it's not empty
+    if (claimToTest) {
+      apiFormData.append('text', claimToTest);
+    }
+
+    if (media && media.size > 0) {
+      apiFormData.append('file', media);
     }
 
     console.log(`▶️  Sending POST request to: ${analysisApiUrl}`);
@@ -86,10 +90,10 @@ export async function handleTextAnalysis(
       url_input: url,
       summary: result.overall_summary,
       analysis_details: result as any,
-      sources: result.analyzed_claims.flatMap(claim => 
+      sources: result.analyzed_claims.flatMap(claim =>
         claim.supporting_evidence.map(e => e.source)
-        .concat(claim.opposing_evidence.map(e => e.source))
-        .concat(claim.fact_checking_results.map(r => r.url))
+          .concat(claim.opposing_evidence.map(e => e.source))
+          .concat(claim.fact_checking_results.map(r => r.url))
       )
     }]);
 

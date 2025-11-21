@@ -32,7 +32,7 @@ type AnalysisFormProps = {
 
 export function AnalysisForm({ formAction, formRef, isPending }: AnalysisFormProps) {
   const [file, setFile] = useState<File | null>(null);
-  
+
   const handleTextPaste = (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
     const pastedText = event.clipboardData.getData('text');
     const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -45,67 +45,67 @@ export function AnalysisForm({ formAction, formRef, isPending }: AnalysisFormPro
       if (formRef.current) {
         const urlInput = formRef.current.elements.namedItem('url') as HTMLInputElement;
         const textInput = event.currentTarget;
-        
+
         if (urlInput) {
-            event.preventDefault();
-            urlInput.value = url;
-            textInput.value = textWithoutUrl;
-            // Manually trigger change event for react state if needed
-            const nativeTextSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value")?.set;
-            nativeTextSetter?.call(textInput, textWithoutUrl);
-            const ev = new Event('input', { bubbles: true});
-            textInput.dispatchEvent(ev);
+          event.preventDefault();
+          urlInput.value = url;
+          textInput.value = textWithoutUrl;
+          // Manually trigger change event for react state if needed
+          const nativeTextSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value")?.set;
+          nativeTextSetter?.call(textInput, textWithoutUrl);
+          const ev = new Event('input', { bubbles: true });
+          textInput.dispatchEvent(ev);
         }
       }
     }
   };
 
-  const handleImagePaste = (pastedFile: File, sourceUrl?: string) => {
+  const handleImagePaste = (pastedFile: File | null, sourceUrl?: string) => {
     setFile(pastedFile);
     if (sourceUrl && formRef.current) {
-        const urlInput = formRef.current.elements.namedItem('url') as HTMLInputElement;
-        if (urlInput) {
-            urlInput.value = sourceUrl;
-        }
+      const urlInput = formRef.current.elements.namedItem('url') as HTMLInputElement;
+      if (urlInput) {
+        urlInput.value = sourceUrl;
+      }
     }
   };
 
   return (
     <Card className='h-fit'>
-    <CardHeader>
+      <CardHeader>
         <div className='flex justify-between items-center'>
-            <div>
-                <CardTitle>Content Submission</CardTitle>
-                <CardDescription>
-                Submit content in any format below for analysis.
-                </CardDescription>
-            </div>
+          <div>
+            <CardTitle>Content Submission</CardTitle>
+            <CardDescription>
+              Submit content in any format below for analysis.
+            </CardDescription>
+          </div>
         </div>
-    </CardHeader>
-    <form ref={formRef} action={formAction}>
+      </CardHeader>
+      <form ref={formRef} action={formAction}>
         <CardContent className="space-y-6">
-            <div>
-                <h3 className="font-medium mb-2">Text Content</h3>
-                <Textarea
-                    name="text"
-                    placeholder="Paste text content here for analysis..."
-                    className="min-h-64 text-base"
-                    onPaste={handleTextPaste}
-                    />
-            </div>
-            <div>
-                <h3 className="font-medium mb-2">URL</h3>
-                <Input name="url" placeholder="https://example.com/article-to-analyze" />
-            </div>
-            <div>
-                <h3 className="font-medium mb-2">Media File</h3>
-                <FileUpload file={file} setFile={handleImagePaste} name="image"/>
-            </div>
+          <div>
+            <h3 className="font-medium mb-2">Text Content</h3>
+            <Textarea
+              name="text"
+              placeholder="Paste text content here for analysis..."
+              className="min-h-64 text-base"
+              onPaste={handleTextPaste}
+            />
+          </div>
+          <div>
+            <h3 className="font-medium mb-2">URL</h3>
+            <Input name="url" placeholder="https://example.com/article-to-analyze" />
+          </div>
+          <div>
+            <h3 className="font-medium mb-2">Media File (Image, Audio, or Video)</h3>
+            <FileUpload file={file} setFile={handleImagePaste} name="media" />
+          </div>
         </CardContent>
-      <CardFooter className="justify-end">
-        <SubmitButton isPending={isPending} />
-      </CardFooter>
-    </form>
-  </Card>
+        <CardFooter className="justify-end">
+          <SubmitButton isPending={isPending} />
+        </CardFooter>
+      </form>
+    </Card>
   );
 }
