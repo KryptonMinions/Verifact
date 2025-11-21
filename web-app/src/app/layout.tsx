@@ -17,17 +17,7 @@ import { LayoutDashboard, Search, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { createServerClient } from '@/lib/supabase/server';
-import { UserNav } from '@/components/auth/user-nav';
-import { LoginDialog } from '@/components/auth/login-dialog';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { SiteHeader } from '@/components/layout/site-header';
 
 export const metadata: Metadata = {
   title: 'VeriFact',
@@ -113,28 +103,7 @@ export default async function RootLayout({
             </SidebarFooter>
           </Sidebar>
           <SidebarInset>
-            <header className="flex h-14 items-center justify-end border-b bg-background px-6">
-              {user ? (
-                <UserNav user={user} />
-              ) : (
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="ghost">
-                      Login
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="p-0 max-w-md">
-                    <DialogHeader className="p-6 pb-2">
-                      <DialogTitle>Account Access</DialogTitle>
-                      <DialogDescription>
-                        Sign in or create an account to access your dashboard and save analysis history.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <LoginDialog />
-                  </DialogContent>
-                </Dialog>
-              )}
-            </header>
+            <SiteHeader user={user} />
             {children}
           </SidebarInset>
         </SidebarProvider>
