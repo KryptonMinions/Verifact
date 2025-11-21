@@ -25,9 +25,9 @@ export function SiteHeader({ user }: SiteHeaderProps) {
     return (
         <header
             className={cn(
-                "flex h-14 items-center justify-end border-b px-6 transition-colors duration-300",
+                "flex h-14 items-center justify-end border-b px-6 transition-all duration-300",
                 isTrendsPage
-                    ? "bg-glass-gradient backdrop-blur-xl border-white/10 text-gray-100"
+                    ? "bg-[#050505] backdrop-blur-xl border-neon-blue/30 text-gray-100 shadow-[0_1px_20px_rgba(0,243,255,0.15)]"
                     : "bg-background border-border"
             )}
         >
@@ -37,12 +37,12 @@ export function SiteHeader({ user }: SiteHeaderProps) {
                 <Dialog>
                     <DialogTrigger asChild>
                         <Button
-                            variant={isTrendsPage ? "ghost" : "ghost"}
+                            variant="ghost"
                             className={cn(
-                                isTrendsPage && "text-gray-300 hover:text-white hover:bg-white/10"
+                                isTrendsPage && "text-neon-blue hover:text-white hover:bg-neon-blue/10 border border-neon-blue/30 hover:border-neon-blue/60 hover:shadow-[0_0_15px_rgba(0,243,255,0.3)] transition-all duration-300 font-mono tracking-wider"
                             )}
                         >
-                            Login
+                            {isTrendsPage ? "LOGIN" : "Login"}
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="p-0 max-w-md">
