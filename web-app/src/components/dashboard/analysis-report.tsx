@@ -20,10 +20,12 @@ import {
   ShieldQuestion,
   ThumbsUp,
   ThumbsDown,
+  History,
 } from 'lucide-react';
 import type { AnalysisResult, AnalyzedClaim, FactCheckResult, Evidence } from '@/types';
 import { Badge } from '../ui/badge';
 import { cn } from '@/lib/utils';
+import { ReverseImageTimeline } from './reverse-image-timeline';
 
 type AnalysisReportProps = {
   analysis: any;
@@ -31,7 +33,7 @@ type AnalysisReportProps = {
 
 export function AnalysisReport({ analysis }: AnalysisReportProps) {
   const { analysis_details, text_input, url_input, created_at } = analysis;
-  const { analyzed_claims, tag, overall_summary }: AnalysisResult =
+  const { analyzed_claims, tag, overall_summary, reverse_image_search_data }: AnalysisResult =
     analysis_details;
 
   const getTitle = () => {
@@ -55,7 +57,7 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
       return <CheckCircle2 className="text-green-600" />;
     }
     if (lowerCaseConclusion.includes('misleading')) {
-        return <Info className="text-yellow-600" />;
+      return <Info className="text-yellow-600" />;
     }
     return <ShieldQuestion className="text-yellow-600" />;
   };
@@ -75,7 +77,7 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
       className = 'bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800';
       icon = <CheckCircle2 className="text-green-600" />;
     } else if (lowerCaseTag.includes('misleading') || lowerCaseTag.includes('needs context')) {
-        icon = <Info className="text-yellow-600" />;
+      icon = <Info className="text-yellow-600" />;
     }
 
     return { variant, className, icon };
@@ -127,6 +129,25 @@ Conclusion: ${claim.conclusion}
       }
       reportContent += '---\n';
     });
+
+    // Add RIS timeline data if present
+    if (reverse_image_search_data) {
+      reportContent += `
+Reverse Image Search Timeline
+-----------------------------
+Summary: ${reverse_image_search_data.summary}
+
+Timeline of Appearances (oldest first):
+`;
+      const oldestLinks = [...reverse_image_search_data.matched_links]
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        .slice(0, 5);
+
+      oldestLinks.forEach(link => {
+        reportContent += `- [${link.date}] ${link.domain}: ${link.url}\n`;
+      });
+      reportContent += '---\n';
+    }
 
     const blob = new Blob([reportContent.trim()], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -283,6 +304,20 @@ Conclusion: ${claim.conclusion}
             ))}
           </div>
         </div>
+
+        {/* Reverse Image Search Timeline Section */}
+        {reverse_image_search_data && (
+          <div>
+            <h3 className="mb-3 flex items-center gap-2 text-xl font-semibold">
+              <History />
+              Image Timeline
+            </h3>
+            <ReverseImageTimeline
+              data={reverse_image_search_data}
+              onCollapse={undefined}
+            />
+          </div>
+        )}
       </CardContent>
     </Card>
   );

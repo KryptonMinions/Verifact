@@ -17,8 +17,20 @@ export type AnalyzedClaim = {
   conclusion: string;
 };
 
+export type ReverseImageSearchLink = {
+  date: string;
+  domain: string;
+  url: string;
+};
+
+export type ReverseImageSearchData = {
+  summary: string;
+  matched_links: ReverseImageSearchLink[];
+};
+
 export type AnalysisResult = {
   analyzed_claims: AnalyzedClaim[];
   tag: string;
   overall_summary: string;
+  reverse_image_search_data?: ReverseImageSearchData;
 };

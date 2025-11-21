@@ -68,10 +68,23 @@ export async function handleTextAnalysis(
     console.log(`▶️  Sending POST request to: ${analysisApiUrl}`);
     console.log(`▶️  Claim: "${claimToTest}"`);
 
-    const response = await fetch(analysisApiUrl, {
-      method: 'POST',
-      body: apiFormData,
-    });
+    // Create AbortController with timeout for long-running image analysis
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+      console.error('⏱️ Request timeout after 3 minutes');
+    }, 180000); // 3 minutes timeout
+
+    let response;
+    try {
+      response = await fetch(analysisApiUrl, {
+        method: 'POST',
+        body: apiFormData,
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeoutId); // Clear timeout if request completes
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -105,9 +118,19 @@ export async function handleTextAnalysis(
 
   } catch (e: any) {
     console.error(e);
+
+    // Provide more specific error messages
+    let errorMessage = e.message || 'An unexpected error occurred during analysis.';
+
+    if (e.name === 'AbortError') {
+      errorMessage = 'The analysis request timed out after 3 minutes. The image may be too large or the service is experiencing delays. Please try again or use a smaller image.';
+    } else if (e.message?.includes('fetch failed') || e.message?.includes('socket')) {
+      errorMessage = 'Failed to connect to the analysis service. The backend may be processing the request or experiencing connection issues. Please try again in a moment.';
+    }
+
     return {
       result: null,
-      error: e.message || 'An unexpected error occurred during analysis.',
+      error: errorMessage,
     };
   }
 }
