@@ -10,7 +10,7 @@ const emailSchema = z.string().email('Invalid email address');
 const passwordSchema = z.string().min(8, 'Password must be at least 8 characters');
 
 export async function signUp(prevState: any, formData: FormData) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const supabase = createServerClient(cookieStore);
 
   const email = formData.get('email') as string;
@@ -54,12 +54,12 @@ export async function signUp(prevState: any, formData: FormData) {
 }
 
 export async function signIn(prevState: any, formData: FormData) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const supabase = createServerClient(cookieStore);
 
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
-  
+
   const emailValidation = emailSchema.safeParse(email);
   if (!emailValidation.success) {
     return { message: emailValidation.error.errors[0].message };
@@ -84,7 +84,7 @@ export async function signIn(prevState: any, formData: FormData) {
 }
 
 export async function signOut() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const supabase = createServerClient(cookieStore);
   const { error } = await supabase.auth.signOut();
 
@@ -92,7 +92,79 @@ export async function signOut() {
     console.error('Error signing out:', error);
     return;
   }
-  
+
   revalidatePath('/', 'layout');
   redirect('/');
+}
+
+export async function signInWithGoogle() {
+  const cookieStore = await cookies();
+  const supabase = createServerClient(cookieStore);
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+    },
+  });
+
+  if (data.url) {
+    redirect(data.url);
+  }
+}
+
+export async function signInOrSignUp(prevState: any, formData: FormData) {
+  const cookieStore = await cookies();
+  const supabase = createServerClient(cookieStore);
+
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+
+  const emailValidation = emailSchema.safeParse(email);
+  if (!emailValidation.success) {
+    return { message: emailValidation.error.errors[0].message };
+  }
+
+  const passwordValidation = passwordSchema.safeParse(password);
+  if (!passwordValidation.success) {
+    return { message: passwordValidation.error.errors[0].message };
+  }
+
+  // Try to sign in first
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  // If sign in succeeds, redirect to dashboard
+  if (!signInError) {
+    revalidatePath('/', 'layout');
+    redirect('/dashboard');
+  }
+
+  // If the error is "Invalid login credentials", try to create a new account
+  if (signInError.message.includes('Invalid login credentials')) {
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          email_confirm: false,
+        },
+      },
+    });
+
+    if (signUpError) {
+      return { message: signUpError.message };
+    }
+
+    if (data.user) {
+      revalidatePath('/', 'layout');
+      redirect('/dashboard');
+    }
+
+    return { message: 'An unknown error occurred during sign up.' };
+  }
+
+  // For other sign in errors, return the error message
+  return { message: signInError.message };
 }

@@ -258,3 +258,6 @@ Thumbs.db
 
 # Misc
 *.pem
+
+# Allow src/lib for Next.js
+!web-app/src/lib/
