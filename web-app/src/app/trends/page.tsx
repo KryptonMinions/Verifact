@@ -1,24 +1,62 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
-import { db } from '@/lib/firebase/client';
+import { collection, onSnapshot, query, orderBy, limit, getFirestore, doc } from 'firebase/firestore';
+import { getApp } from 'firebase/app';
+import { db as defaultDb } from '@/lib/firebase/client';
 import TrendingCard from '@/components/dashboard/trending-card';
 import { TrendsChart } from '@/components/dashboard/trends-chart';
-import { CyberpunkMetrics } from '@/components/dashboard/cyberpunk-metrics';
+import { MetricsRow } from '@/components/dashboard/metrics-row';
 import { TrendingCardModal } from '@/components/dashboard/trending-card-modal';
 
 export default function TrendsPage() {
+  // State for the top dashboard section (from 'misinfo-reports' DB)
+  const [dashboardData, setDashboardData] = useState<any>({});
+  const [status, setStatus] = useState<'connecting' | 'online' | 'error'>('connecting');
+
+  // State for the bottom grid (from default DB)
   const [trends, setTrends] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingTrends, setLoadingTrends] = useState(true);
   const [expandedCard, setExpandedCard] = useState<any | null>(null);
 
+  // 1. Connect to 'misinfo-reports' database for Dashboard Stats
+  useEffect(() => {
+    let unsubscribe: () => void;
+
+    try {
+      const app = getApp();
+      const misinfoDb = getFirestore(app, "misinfo-reports");
+      const docRef = doc(misinfoDb, "app_metadata", "dashboard_stats");
+
+      unsubscribe = onSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists()) {
+          setDashboardData(docSnap.data());
+          setStatus('online');
+        } else {
+          console.log("Waiting for dashboard stats...");
+          setStatus('connecting');
+        }
+      }, (error) => {
+        console.error("Dashboard Stats Error:", error);
+        setStatus('error');
+      });
+    } catch (e) {
+      console.error("Error connecting to misinfo-reports DB:", e);
+      setStatus('error');
+    }
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
+
+  // 2. Connect to default database for Trending Topics Grid
   useEffect(() => {
     const appId = "default-app-id";
     const collectionPath = `artifacts/${appId}/public/data/trending_topics`;
 
     const q = query(
-      collection(db, collectionPath),
+      collection(defaultDb, collectionPath),
       orderBy('topic_count', 'desc'),
       limit(20)
     );
@@ -29,64 +67,51 @@ export default function TrendsPage() {
         ...doc.data()
       }));
       setTrends(trendsData);
-      setLoading(false);
+      setLoadingTrends(false);
     });
 
     return () => unsubscribe();
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-gray-100 p-4 md:p-8 font-sans selection:bg-neon-pink selection:text-white">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-[#0f111a] text-gray-300 p-6 font-sans">
+      <div className="max-w-6xl mx-auto space-y-6">
 
         {/* Header */}
-        <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
+        <div className="flex justify-between items-end border-b border-gray-800 pb-4">
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-500 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
-              GLOBAL <span className="text-neon-blue">MISINFO</span> TRENDS
-            </h1>
-            <p className="text-gray-400 mt-2 max-w-2xl text-lg">
-              Real-time analysis of high-velocity misinformation vectors across the web.
-            </p>
+            <h1 className="text-3xl font-bold text-white tracking-tight">Topic Trends</h1>
+            <p className="text-gray-500 text-sm mt-1">Real-time frequency of reported misinformation topics</p>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#00ff00]"></div>
-            <span className="text-xs font-mono text-green-400 tracking-widest uppercase">System Online</span>
+          <div className="text-xs text-gray-600 flex items-center gap-2">
+            <span className={`w-2 h-2 rounded-full ${status === 'online' ? 'bg-green-500 animate-pulse' : status === 'error' ? 'bg-red-500' : 'bg-blue-500'}`}></span>
+            <span className={status === 'online' ? 'text-green-400' : status === 'error' ? 'text-red-400' : 'text-gray-400'}>
+              {status === 'online' ? 'Live' : status === 'error' ? 'Error' : 'Connecting...'}
+            </span>
           </div>
-        </header>
-
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-          {/* Left Column: Chart & Metrics */}
-          <div className="lg:col-span-2 space-y-8">
-            <section>
-              <TrendsChart />
-            </section>
-            <section>
-              <CyberpunkMetrics />
-            </section>
-          </div>
-
-          {/* Right Column: Could add a sidebar here later */}
         </div>
 
-        {/* Trending Grid Section */}
-        <section>
+        {/* Metrics Row */}
+        <MetricsRow data={dashboardData} status={status} />
+
+        {/* Chart Section */}
+        <TrendsChart chartData={dashboardData.chart_data} />
+
+        {/* Trending Grid Section (Kept from original) */}
+        <section className="mt-12 pt-8 border-t border-gray-800">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold tracking-tight flex items-center gap-3">
-              <span className="w-1 h-8 bg-neon-pink shadow-[0_0_10px_#ff00ff]"></span>
-              DETECTED ANOMALIES
+            <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-3">
+              Detected Anomalies
             </h2>
             <span className="text-sm font-mono text-gray-500">
               {trends.length} ACTIVE VECTORS
             </span>
           </div>
 
-          {loading ? (
+          {loadingTrends ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-64 rounded-xl bg-white/5 animate-pulse border border-white/5"></div>
+                <div key={i} className="h-64 rounded-xl bg-[#1a1d2d] animate-pulse border border-gray-800"></div>
               ))}
             </div>
           ) : (
