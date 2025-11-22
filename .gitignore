@@ -196,6 +196,7 @@ cython_debug/
 
 # Backend agent with sensitive credentials
 agent.py
+misinformation-app/
 
 # Cursor
 #  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to

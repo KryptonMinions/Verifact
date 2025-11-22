@@ -134,3 +134,54 @@ export async function handleTextAnalysis(
     };
   }
 }
+
+export async function handleImageSearch(
+  prevState: any,
+  formData: FormData
+): Promise<{ result: any | null; error: string | null }> {
+  const media = formData.get('media') as File;
+
+  if (!media || media.size === 0) {
+    return {
+      result: null,
+      error: 'Please provide an image to search.',
+    };
+  }
+
+  const analysisApiUrl = process.env.RIS_SERVICE_URL;
+  if (!analysisApiUrl) {
+    return { result: null, error: 'Analysis service not configured.' };
+  }
+
+  // Construct the RIS endpoint URL
+  // Assumes EXTERNAL_ANALYSIS_API_URL is like "http://host:port/" or "http://host:port"
+  const baseUrl = analysisApiUrl.endsWith('/') ? analysisApiUrl.slice(0, -1) : analysisApiUrl;
+  const risEndpoint = `${baseUrl}/generate-timeline`;
+
+  try {
+    const apiFormData = new FormData();
+    apiFormData.append('file', media);
+
+    console.log(`▶️  Sending RIS request to: ${risEndpoint}`);
+
+    const response = await fetch(risEndpoint, {
+      method: 'POST',
+      body: apiFormData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`RIS request failed: ${response.status} ${errorText}`);
+    }
+
+    const result = await response.json();
+    return { result, error: null };
+
+  } catch (e: any) {
+    console.error('RIS Error:', e);
+    return {
+      result: null,
+      error: e.message || 'Failed to perform reverse image search.',
+    };
+  }
+}

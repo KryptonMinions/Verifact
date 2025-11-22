@@ -8,6 +8,7 @@ from typing import Any, Union, Dict
 import asyncio
 from datetime import datetime
 import mimetypes
+import httpx
 
 # --- 1. .env path loading (no changes) ---
 logging.basicConfig(level=logging.INFO)
@@ -228,6 +229,34 @@ async def run_multimodal_analysis_async(file_bytes: bytes, mime_type: str) -> st
         logger.error(f"Failed during multimodal analysis: {e}", exc_info=True)
         return ""
 
+
+async def run_reverse_image_search_async(file_bytes: bytes, filename: str, content_type: str) -> Dict[str, Any]:
+    ris_url = os.environ.get("RIS_SERVICE_URL")
+    if not ris_url:
+        logger.warning("RIS_SERVICE_URL not set in .env. Skipping Reverse Image Search.")
+        return {}
+
+    base_url = ris_url.rstrip("/") 
+    endpoint = f"{base_url}/generate-timeline"
+    
+    logger.info(f"📡 Sending image to RIS endpoint: {endpoint}")
+
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            files = {'file': (filename, file_bytes, content_type)}
+            response = await client.post(endpoint, files=files)
+            
+            if response.status_code == 200:
+                data = response.json()
+                logger.info("✅ Reverse Image Search successful.")
+                return data
+            else:
+                logger.error(f"❌ RIS Service failed with status {response.status_code}: {response.text}")
+                return {}
+    except Exception as e:
+        logger.error(f"❌ Failed to connect to RIS Service: {e}", exc_info=True)
+        return {}
+
 async def save_log_to_bigquery_async(report_object: Dict, hash: str, text: str):
     if not bq_client:
         logger.error("BigQuery client not initialized. Skipping log.")
@@ -266,6 +295,32 @@ async def save_log_to_bigquery_async(report_object: Dict, hash: str, text: str):
 # ==============================================================================
 # --- 8. The Refactored Endpoint (HEAVILY MODIFIED) ---
 # ==============================================================================
+
+@app.post("/reverse-image-search")
+async def reverse_image_search(
+    file: UploadFile = File(...)
+):
+    """
+    Dedicated endpoint for Reverse Image Search.
+    Returns the RIS timeline data directly.
+    """
+    if not file:
+        raise HTTPException(status_code=400, detail="No file provided.")
+    
+    file_bytes = await file.read()
+    mime_type, _ = mimetypes.guess_type(file.filename or 'default.media')
+    if mime_type is None:
+        mime_type = 'application/octet-stream'
+        
+    if not mime_type.startswith("image/"):
+         raise HTTPException(status_code=400, detail="File must be an image.")
+
+    ris_data = await run_reverse_image_search_async(file_bytes, file.filename, mime_type)
+    
+    if not ris_data:
+        return {"summary": "No results found or service unavailable.", "matched_links": []}
+        
+    return ris_data
 
 @app.post("/")
 async def run_agent(
