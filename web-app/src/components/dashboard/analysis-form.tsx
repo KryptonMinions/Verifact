@@ -98,6 +98,10 @@ export function AnalysisForm({ formAction, formRef, isPending }: AnalysisFormPro
             <Input name="url" placeholder="https://example.com/article-to-analyze" />
           </div>
           <div>
+            <h3 className="font-medium mb-2">Source (Optional)</h3>
+            <Input name="source" placeholder="e.g., Twitter, Facebook, News Article, etc." />
+          </div>
+          <div>
             <h3 className="font-medium mb-2">Media File (Image, Audio, or Video)</h3>
             <FileUpload file={file} setFile={handleImagePaste} name="media" />
           </div>

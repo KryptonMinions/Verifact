@@ -9,6 +9,7 @@ const formSchema = z.object({
   text: z.string().optional(),
   url: z.string().url().optional().or(z.literal('')),
   media: z.any().optional(),
+  source: z.string().optional(),
 });
 
 export async function handleTextAnalysis(
@@ -22,6 +23,7 @@ export async function handleTextAnalysis(
     text: formData.get('text'),
     url: formData.get('url'),
     media: formData.get('media'),
+    source: formData.get('source'),
   };
 
   const validatedFields = formSchema.safeParse(rawFormData);
@@ -33,7 +35,7 @@ export async function handleTextAnalysis(
     };
   }
 
-  const { text, url, media } = validatedFields.data;
+  const { text, url, media, source } = validatedFields.data;
   const claimToTest = [text, url].filter(Boolean).join(' ');
 
   if (!claimToTest && (!media || media.size === 0)) {
@@ -63,6 +65,11 @@ export async function handleTextAnalysis(
 
     if (media && media.size > 0) {
       apiFormData.append('file', media);
+    }
+
+    // Append source if provided
+    if (source) {
+      apiFormData.append('source', source);
     }
 
     console.log(`▶️  Sending POST request to: ${analysisApiUrl}`);
@@ -101,6 +108,7 @@ export async function handleTextAnalysis(
       user_id: user?.id,
       text_input: text,
       url_input: url,
+      source_input: source,
       summary: result.overall_summary,
       analysis_details: result as any,
       sources: result.analyzed_claims.flatMap(claim =>

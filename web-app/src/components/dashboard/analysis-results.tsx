@@ -39,7 +39,7 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
       return <CheckCircle2 className="text-green-600" />;
     }
     if (lowerCaseConclusion.includes('misleading')) {
-        return <Info className="text-yellow-600" />;
+      return <Info className="text-yellow-600" />;
     }
     return <ShieldQuestion className="text-yellow-600" />;
   };
@@ -48,19 +48,19 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
     const lowerCaseTag = tag.toLowerCase();
     if (lowerCaseTag.includes('false')) {
       return {
-        variant: 'destructive',
+        variant: 'destructive' as const,
         className: 'bg-red-50 border-red-200 dark:bg-red-950 dark:border-red-800',
       };
     }
     if (lowerCaseTag.includes('true')) {
       return {
-        variant: 'default',
+        variant: 'default' as const,
         className: 'bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800',
       };
     }
     // For "Misleading", "Needs Context", etc.
     return {
-      variant: 'secondary',
+      variant: 'secondary' as const,
       className: 'bg-yellow-50 border-yellow-200 dark:bg-yellow-950 dark:border-yellow-800',
     };
   };
@@ -77,10 +77,10 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
         <Card className={cn('transition-colors', tagInfo.className)}>
           <CardContent className="p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h4 className="font-semibold">Overall Finding</h4>
+              <h4 className="font-semibold text-gray-900 dark:text-gray-100">Overall Finding</h4>
               <Badge variant={tagInfo.variant}>{tag}</Badge>
             </div>
-            <p className="text-base leading-relaxed">{overall_summary}</p>
+            <p className="text-base leading-relaxed text-gray-900 dark:text-gray-100">{overall_summary}</p>
           </CardContent>
         </Card>
       </div>
