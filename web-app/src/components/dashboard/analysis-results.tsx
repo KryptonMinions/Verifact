@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { ShareButton } from './share-button';
 
 type AnalysisResultsProps = {
   result: AnalysisResult;
@@ -76,9 +77,12 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
         </h3>
         <Card className={cn('transition-colors', tagInfo.className)}>
           <CardContent className="p-6">
-            <div className="mb-4 flex items-center justify-between">
-              <h4 className="font-semibold text-gray-900 dark:text-gray-100">Overall Finding</h4>
-              <Badge variant={tagInfo.variant}>{tag}</Badge>
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <h4 className="font-semibold text-gray-900 dark:text-gray-100">Overall Finding</h4>
+                <Badge variant={tagInfo.variant}>{tag}</Badge>
+              </div>
+              <ShareButton result={result} variant="outline" size="sm" className="border-gray-700 bg-[#252837] hover:bg-blue-600/20" />
             </div>
             <p className="text-base leading-relaxed text-gray-900 dark:text-gray-100">{overall_summary}</p>
           </CardContent>

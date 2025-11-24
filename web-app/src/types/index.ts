@@ -34,3 +34,12 @@ export type AnalysisResult = {
   overall_summary: string;
   reverse_image_search_data?: ReverseImageSearchData;
 };
+
+export type SharePlatform = 'x' | 'reddit' | 'linkedin' | 'whatsapp' | 'telegram' | 'email' | 'native';
+
+export type ShareOptions = {
+  platform: SharePlatform;
+  text: string;
+  url?: string;
+  title?: string;
+};
