@@ -100,10 +100,7 @@ export function TrendingCardModal({ trend, onClose }: TrendingCardModalProps) {
                             {verdict}
                         </Badge>
                         <div className="text-right">
-                            <span className="text-xs font-mono text-gray-400">
-                                #{trend.example_hash.substring(0, 8)}
-                            </span>
-                            <div className="text-sm text-gray-400 mt-1">
+                            <div className="text-sm text-gray-400">
                                 {trend.topic_count} reports
                             </div>
                         </div>

@@ -68,9 +68,6 @@ export default function TrendingCard({ trend, onCardClick }: TrendingCardProps) 
         <Badge variant="outline" className={cn("uppercase tracking-widest font-mono text-[10px]", badgeClass)}>
           {verdict}
         </Badge>
-        <span className="text-xs font-mono text-gray-400">
-          #{trend.example_hash.substring(0, 6)}
-        </span>
       </CardHeader>
       <CardContent className="flex-grow">
         <h3 className="font-semibold leading-tight tracking-tight mb-3 text-gray-100 text-lg drop-shadow-md">

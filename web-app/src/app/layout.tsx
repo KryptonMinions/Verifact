@@ -13,7 +13,7 @@ import {
   SidebarProvider,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons/logo';
-import { LayoutDashboard, Search, TrendingUp, History } from 'lucide-react';
+import { LayoutDashboard, Search, TrendingUp, History, Database } from 'lucide-react';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { createServerClient } from '@/lib/supabase/server';
@@ -99,6 +99,14 @@ export default async function RootLayout({
                     <Link href="/trends">
                       <TrendingUp />
                       Trends
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/reports">
+                      <Database />
+                      Reports
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

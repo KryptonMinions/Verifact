@@ -43,3 +43,10 @@ export type ShareOptions = {
   url?: string;
   title?: string;
 };
+
+// Report types for the searchable reports database
+export type Report = {
+  id: string;
+  timestamp: string | null;
+  analyzed_claims: AnalyzedClaim[];
+};
