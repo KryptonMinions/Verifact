@@ -19,6 +19,7 @@ import {
   ShieldQuestion,
   ThumbsUp,
   ThumbsDown,
+  ShieldCheck,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -31,7 +32,7 @@ type AnalysisResultsProps = {
 };
 
 export function AnalysisResults({ result }: AnalysisResultsProps) {
-  const { analyzed_claims, tag, overall_summary } = result;
+  const { analyzed_claims, tag, overall_summary, source_credibility_summary } = result;
 
   const getClaimIcon = (conclusion: string) => {
     const lowerCaseConclusion = conclusion.toLowerCase();
@@ -69,6 +70,13 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
   };
 
   const tagInfo = getTagInfo(tag);
+
+  const getCredibilityColor = (score: number) => {
+    if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
+    if (score >= 60) return 'text-blue-600 bg-blue-50 border-blue-200';
+    if (score >= 40) return 'text-orange-600 bg-orange-50 border-orange-200';
+    return 'text-red-600 bg-red-50 border-red-200';
+  };
 
   const getVerdictIcon = (tag: string) => {
     const lowerTag = tag.toLowerCase();
@@ -322,6 +330,73 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
           ))}
         </div>
       </div>
+
+      {/* Source Credibility Assessment Section */}
+      {source_credibility_summary && source_credibility_summary.length > 0 && (
+        <div>
+          <h3 className="mb-3 flex items-center gap-2 text-xl font-semibold">
+            <ShieldCheck />
+            Source Credibility Assessment
+          </h3>
+          <div className="space-y-4">
+            {source_credibility_summary.map((source, index) => (
+              <Card key={index} className="transition-all hover:shadow-md">
+                <CardHeader>
+                  <CardTitle className="flex items-start justify-between gap-3">
+                    <a
+                      href={source.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-grow text-base text-primary underline-offset-4 hover:underline break-all"
+                    >
+                      {source.url}
+                    </a>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          'text-lg font-bold px-3 py-1',
+                          getCredibilityColor(source.credibility_score)
+                        )}
+                      >
+                        {source.credibility_score}
+                      </Badge>
+                      <Badge variant="secondary" className="text-xs">
+                        {source.category}
+                      </Badge>
+                    </div>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {source.flags && source.flags.length > 0 && (
+                    <div>
+                      <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                        Trust Indicators
+                      </h4>
+                      <ul className="space-y-1">
+                        {source.flags.map((flag, flagIndex) => (
+                          <li
+                            key={flagIndex}
+                            className="flex items-start gap-2 text-sm text-muted-foreground"
+                          >
+                            <CheckCircle2 className="mt-0.5 size-4 flex-shrink-0 text-green-600" />
+                            <span>{flag}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  <div className="rounded-md border-l-4 border-primary bg-muted/30 p-4">
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                      {source.reasoning}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

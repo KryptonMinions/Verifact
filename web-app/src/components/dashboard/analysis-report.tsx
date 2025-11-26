@@ -21,6 +21,7 @@ import {
   ThumbsUp,
   ThumbsDown,
   History,
+  ShieldCheck,
 } from 'lucide-react';
 import type { AnalysisResult, AnalyzedClaim, FactCheckResult, Evidence } from '@/types';
 import { Badge } from '../ui/badge';
@@ -36,7 +37,7 @@ type AnalysisReportProps = {
 
 export function AnalysisReport({ analysis }: AnalysisReportProps) {
   const { analysis_details, text_input, url_input, created_at } = analysis;
-  const { analyzed_claims, tag, overall_summary, reverse_image_search_data }: AnalysisResult =
+  const { analyzed_claims, tag, overall_summary, reverse_image_search_data, source_credibility_summary }: AnalysisResult =
     analysis_details;
 
   const getTitle = () => {
@@ -88,6 +89,13 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
 
   const tagInfo = getTagInfo(tag);
 
+  const getCredibilityColor = (score: number) => {
+    if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
+    if (score >= 60) return 'text-blue-600 bg-blue-50 border-blue-200';
+    if (score >= 40) return 'text-orange-600 bg-orange-50 border-orange-200';
+    return 'text-red-600 bg-red-50 border-red-200';
+  };
+
   const handleDownload = () => {
     let reportContent = `
 Analysis Report
@@ -132,6 +140,29 @@ Conclusion: ${claim.conclusion}
       }
       reportContent += '---\n';
     });
+
+    // Add source credibility data if present
+    if (source_credibility_summary && source_credibility_summary.length > 0) {
+      reportContent += `
+
+Source Credibility Assessment
+------------------------------
+`;
+      source_credibility_summary.forEach((source, index) => {
+        reportContent += `
+Source ${index + 1}: ${source.url}
+Credibility Score: ${source.credibility_score}/100
+Category: ${source.category}
+
+Trust Indicators:
+${source.flags.map(flag => `- ${flag}`).join('\n')}
+
+Reasoning:
+${source.reasoning}
+
+---\n`;
+      });
+    }
 
     // Add RIS timeline data if present
     if (reverse_image_search_data) {
@@ -320,6 +351,73 @@ Timeline of Appearances (oldest first):
             ))}
           </div>
         </div>
+
+        {/* Source Credibility Assessment Section */}
+        {source_credibility_summary && source_credibility_summary.length > 0 && (
+          <div>
+            <h3 className="mb-3 flex items-center gap-2 text-xl font-semibold">
+              <ShieldCheck />
+              Source Credibility Assessment
+            </h3>
+            <div className="space-y-4">
+              {source_credibility_summary.map((source, index) => (
+                <Card key={index} className="transition-all hover:shadow-md">
+                  <CardHeader>
+                    <CardTitle className="flex items-start justify-between gap-3">
+                      <a
+                        href={source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-grow text-base text-primary underline-offset-4 hover:underline break-all"
+                      >
+                        {source.url}
+                      </a>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            'text-lg font-bold px-3 py-1',
+                            getCredibilityColor(source.credibility_score)
+                          )}
+                        >
+                          {source.credibility_score}
+                        </Badge>
+                        <Badge variant="secondary" className="text-xs">
+                          {source.category}
+                        </Badge>
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {source.flags && source.flags.length > 0 && (
+                      <div>
+                        <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                          Trust Indicators
+                        </h4>
+                        <ul className="space-y-1">
+                          {source.flags.map((flag, flagIndex) => (
+                            <li
+                              key={flagIndex}
+                              className="flex items-start gap-2 text-sm text-muted-foreground"
+                            >
+                              <CheckCircle2 className="mt-0.5 size-4 flex-shrink-0 text-green-600" />
+                              <span>{flag}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    <div className="rounded-md border-l-4 border-primary bg-muted/30 p-4">
+                      <p className="text-sm leading-relaxed text-muted-foreground">
+                        {source.reasoning}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Reverse Image Search Timeline Section */}
         {reverse_image_search_data && (

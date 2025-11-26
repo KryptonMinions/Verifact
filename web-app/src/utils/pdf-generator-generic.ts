@@ -14,7 +14,7 @@ export function generatePDFFromAnalysisResult(result: AnalysisResult, reportId?:
         mediumGray: [204, 204, 204],
     };
 
-    const { analyzed_claims, tag, overall_summary } = result;
+    const { analyzed_claims, tag, overall_summary, source_credibility_summary } = result;
 
     // Helper function to add colored rectangle background
     const addBackground = (y: number, height: number, color: number[]) => {
@@ -69,11 +69,14 @@ export function generatePDFFromAnalysisResult(result: AnalysisResult, reportId?:
         doc.text(`Report ID: ${reportId}`, 105, metadataY, { align: 'center' });
     }
     doc.text(`Claims Analyzed: ${analyzed_claims.length}`, 105, metadataY + 7, { align: 'center' });
+    if (source_credibility_summary && source_credibility_summary.length > 0) {
+        doc.text(`Sources Analyzed: ${source_credibility_summary.length}`, 105, metadataY + 14, { align: 'center' });
+    }
     doc.text(`Generated: ${new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
-    })}`, 105, metadataY + 14, { align: 'center' });
+    })}`, 105, metadataY + 21, { align: 'center' });
 
     // Decorative line
     doc.setDrawColor(colors.tan[0], colors.tan[1], colors.tan[2]);
@@ -275,6 +278,113 @@ export function generatePDFFromAnalysisResult(result: AnalysisResult, reportId?:
             }
 
             yPosition += 10; // Space between claims
+        });
+    }
+
+    // Source Credibility Assessment Section
+    if (source_credibility_summary && source_credibility_summary.length > 0) {
+        // Check if we need a new page
+        if (yPosition > 200) {
+            doc.addPage();
+            yPosition = 25;
+        }
+
+        // Section header
+        doc.setFillColor(colors.tan[0], colors.tan[1], colors.tan[2]);
+        doc.rect(0, yPosition - 5, 210, 12, 'F');
+
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(255, 255, 255);
+        doc.text('SOURCE CREDIBILITY ASSESSMENT', 20, yPosition + 3);
+
+        yPosition += 15;
+
+        source_credibility_summary.forEach((source: any, index: number) => {
+            // Check if we need a new page
+            if (yPosition > 240) {
+                doc.addPage();
+                yPosition = 25;
+            }
+
+            // Source URL
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(colors.black[0], colors.black[1], colors.black[2]);
+            doc.text(`Source ${index + 1}:`, 20, yPosition);
+            yPosition += 5;
+
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(colors.darkTeal[0], colors.darkTeal[1], colors.darkTeal[2]);
+            const urlText = source.url.length > 80 ? source.url.substring(0, 80) + '...' : source.url;
+            const urlLines = doc.splitTextToSize(urlText, 170);
+            doc.text(urlLines, 20, yPosition);
+            yPosition += urlLines.length * 5 + 7;
+
+            // Score and Category Box
+            doc.setFillColor(colors.lightGray[0], colors.lightGray[1], colors.lightGray[2]);
+            doc.roundedRect(20, yPosition - 3, 170, 15, 2, 2, 'F');
+
+            // Determine color based on score
+            const score = source.credibility_score;
+            let scoreColor = colors.darkMaroon;
+            if (score >= 80) scoreColor = colors.darkTeal;
+            else if (score >= 60) scoreColor = colors.tan;
+
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(scoreColor[0], scoreColor[1], scoreColor[2]);
+            doc.text(`Score: ${score}/100`, 25, yPosition + 5);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(colors.black[0], colors.black[1], colors.black[2]);
+            doc.text(`Category: ${source.category}`, 25, yPosition + 10);
+
+            yPosition += 20;
+
+            // Trust Indicators
+            if (source.flags && source.flags.length > 0) {
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(colors.darkTeal[0], colors.darkTeal[1], colors.darkTeal[2]);
+                doc.text('Trust Indicators:', 25, yPosition);
+                yPosition += 5;
+
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(colors.black[0], colors.black[1], colors.black[2]);
+                source.flags.forEach((flag: string) => {
+                    if (yPosition > 270) {
+                        doc.addPage();
+                        yPosition = 25;
+                    }
+                    const flagLines = doc.splitTextToSize(`✓ ${flag}`, 160);
+                    doc.text(flagLines, 30, yPosition);
+                    yPosition += flagLines.length * 4 + 2;
+                });
+                yPosition += 5;
+            }
+
+            // Reasoning
+            if (source.reasoning) {
+                if (yPosition > 240) {
+                    doc.addPage();
+                    yPosition = 25;
+                }
+
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(colors.tan[0], colors.tan[1], colors.tan[2]);
+                doc.text('Reasoning:', 25, yPosition);
+                yPosition += 5;
+
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(colors.black[0], colors.black[1], colors.black[2]);
+                const reasoningLines = doc.splitTextToSize(source.reasoning, 165);
+                doc.text(reasoningLines, 25, yPosition);
+                yPosition += reasoningLines.length * 4 + 10;
+            }
+
+            yPosition += 5; // Space between sources
         });
     }
 

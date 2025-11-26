@@ -60,6 +60,7 @@ export default function ReportsPage() {
                                     id: doc.id,
                                     timestamp: data.timestamp || null,
                                     analyzed_claims: data.analyzed_claims,
+                                    source_credibility_summary: data.source_credibility_summary,
                                 });
                             }
                         });
