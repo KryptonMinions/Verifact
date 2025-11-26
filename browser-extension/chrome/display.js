@@ -43,7 +43,7 @@ function displayResultModal(data) {
         if (!evidenceList || evidenceList.length === 0) {
             return `<p class="no-evidence">No ${type} evidence found.</p>`;
         }
-        
+
         return evidenceList.map((evidence, index) => `
             <div class="evidence-item">
                 <p class="evidence-summary">${evidence.summary}</p>
@@ -61,7 +61,7 @@ function displayResultModal(data) {
         if (!claims || claims.length === 0) {
             return '<p class="no-claims">No specific claims were analyzed.</p>';
         }
-        
+
         return claims.map(claim => `
             <div class="claim-card">
                 <p class="claim-text">"${claim.claim_text}"</p>
@@ -80,6 +80,8 @@ function displayResultModal(data) {
                     </div>
                 </div>
                 
+                ${createFactCheckingHtml(claim.fact_checking_results)}
+                
                 <div class="claim-conclusion-section">
                     <h4 class="evidence-title conclusion">Conclusion</h4>
                     <p class="claim-conclusion-text">${claim.conclusion}</p>
@@ -88,7 +90,91 @@ function displayResultModal(data) {
         `).join('');
     };
 
+    /**
+     * Helper to create the HTML for fact-checking results.
+     * @param {Array} factCheckResults - The array of fact-checking result objects.
+     */
+    const createFactCheckingHtml = (factCheckResults) => {
+        if (!factCheckResults || factCheckResults.length === 0) {
+            return '';
+        }
+
+        const resultsHtml = factCheckResults.map((fc, index) => `
+            <div class="fact-check-item">
+                <p class="fact-check-inference">${fc.inference}</p>
+                <a href="${fc.url}" target="_blank" class="fact-check-source">
+                    Fact-Check Source [${index + 1}]
+                </a>
+            </div>
+        `).join('');
+
+        return `
+            <div class="evidence-section">
+                <h4 class="evidence-title fact-checking">Fact-Checking Results</h4>
+                <div class="fact-check-list">
+                    ${resultsHtml}
+                </div>
+            </div>
+        `;
+    };
+
+    /**
+     * Helper to create the HTML for source credibility summary.
+     * @param {Array} credibilitySummary - The array of source credibility objects.
+     */
+    const createCredibilityHtml = (credibilitySummary) => {
+        if (!credibilitySummary || credibilitySummary.length === 0) {
+            return '<p class="no-credibility">No source credibility data available.</p>';
+        }
+
+        return credibilitySummary.map(source => {
+            // Determine score color class
+            const score = source.credibility_score;
+            let scoreClass = 'score-low';
+            if (score >= 80) scoreClass = 'score-high';
+            else if (score >= 60) scoreClass = 'score-medium-high';
+            else if (score >= 40) scoreClass = 'score-medium-low';
+
+            // Normalize category for CSS class
+            const categoryClass = source.category
+                .toLowerCase()
+                .replace(/\s+/g, '-')
+                .replace(/[^a-z0-9-]/g, '');
+
+            // Format flags list
+            const flagsHtml = source.flags && source.flags.length > 0
+                ? `<div class="credibility-flags">
+                    <p class="credibility-flags-title">Trust Indicators:</p>
+                    <ul class="credibility-flags-list">
+                        ${source.flags.map(flag => `<li>${flag}</li>`).join('')}
+                    </ul>
+                </div>`
+                : '';
+
+            return `
+                <div class="credibility-card">
+                    <div class="credibility-header">
+                        <a href="${source.url}" target="_blank" class="credibility-url">
+                            ${source.url}
+                        </a>
+                        <div class="credibility-score-wrapper">
+                            <span class="credibility-score ${scoreClass}">${score}</span>
+                            <span class="credibility-category category-${categoryClass}">
+                                ${source.category}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="credibility-details">
+                        ${flagsHtml}
+                        <p class="credibility-reasoning">${source.reasoning}</p>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    };
+
     const overallTag = data.tag || "Unverified";
+
     const tagColorClass = overallTag.toLowerCase().replace(' ', '-'); // e.g., "needs context" -> "needs-context"
 
     modal.innerHTML = `
@@ -108,6 +194,12 @@ function displayResultModal(data) {
                 <h3 class="claims-title">Analyzed Claims</h3>
                 <div class="claims-container">${createClaimsHtml(data.analyzed_claims)}</div>
             </div>
+            ${data.source_credibility_summary ? `
+            <div class="credibility-section">
+                <h3 class="credibility-title">Source Credibility Assessment</h3>
+                <div class="credibility-container">${createCredibilityHtml(data.source_credibility_summary)}</div>
+            </div>
+            ` : ''}
         </div>
     `;
 

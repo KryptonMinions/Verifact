@@ -16,8 +16,15 @@
 }
 
 @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 /* --- Loading State Modal --- */
@@ -40,8 +47,13 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .loading-text {
@@ -52,41 +64,151 @@
 
 /* --- Result Modal Styles --- */
 #verifact-result-modal {
-    width: 450px; /* Made slightly wider */
+    width: 450px;
+    /* Made slightly wider */
     max-height: calc(100vh - 40px);
     display: flex;
     flex-direction: column;
 }
 
-#verifact-result-modal .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; }
-#verifact-result-modal .title { font-size: 16px; font-weight: 600; }
-#verifact-result-modal .close-btn { background: none; border: none; font-size: 24px; line-height: 1; cursor: pointer; color: #a0aec0; padding: 4px; }
-#verifact-result-modal .close-btn:hover { color: #4a5568; }
-#verifact-result-modal .content { padding: 16px; overflow-y: auto; }
+#verifact-result-modal .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e2e8f0;
+    flex-shrink: 0;
+}
+
+#verifact-result-modal .title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+#verifact-result-modal .close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    color: #a0aec0;
+    padding: 4px;
+}
+
+#verifact-result-modal .close-btn:hover {
+    color: #4a5568;
+}
+
+#verifact-result-modal .content {
+    padding: 16px;
+    overflow-y: auto;
+}
 
 /* --- Summary Section --- */
-.summary-section { margin-bottom: 20px; }
-.summary-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.summary-title { font-size: 16px; font-weight: 600; color: #2d3748; }
-.summary-text { font-size: 14px; line-height: 1.6; color: #4a5568; }
+.summary-section {
+    margin-bottom: 20px;
+}
 
-.overall-tag { padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
-.tag-false { background-color: #fed7d7; color: #c53030; }
-.tag-true { background-color: #c6f6d5; color: #2f855a; }
-.tag-unverified { background-color: #feebc8; color: #b7791f; }
-.tag-misleading { background-color: #feebc8; color: #b7791f; }
-.tag-needs-context { background-color: #bee3f8; color: #2c5282; }
-.tag-error { background-color: #e2e8f0; color: #4a5568; }
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.summary-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.summary-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #4a5568;
+}
+
+.overall-tag {
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.tag-false {
+    background-color: #fed7d7;
+    color: #c53030;
+}
+
+.tag-true {
+    background-color: #c6f6d5;
+    color: #2f855a;
+}
+
+.tag-unverified {
+    background-color: #feebc8;
+    color: #b7791f;
+}
+
+.tag-misleading {
+    background-color: #feebc8;
+    color: #b7791f;
+}
+
+.tag-needs-context {
+    background-color: #bee3f8;
+    color: #2c5282;
+}
+
+.tag-error {
+    background-color: #e2e8f0;
+    color: #4a5568;
+}
 
 /* --- Claims Section --- */
-.claims-title { font-size: 16px; font-weight: 600; color: #2d3748; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #edf2f7; }
-.claims-container { display: flex; flex-direction: column; gap: 16px; }
-.no-claims { font-size: 14px; color: #718096; text-align: center; padding: 20px 0; }
-.claim-card { background-color: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
-.claim-text { font-size: 15px; font-weight: 600; color: #2d3748; margin-bottom: 16px; line-height: 1.5; }
+.claims-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.claims-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.no-claims {
+    font-size: 14px;
+    color: #718096;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.claim-card {
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.claim-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
 
 /* --- New Evidence Styles --- */
-.evidence-section { margin-top: 12px; }
+.evidence-section {
+    margin-top: 12px;
+}
+
 .evidence-title {
     font-size: 12px;
     font-weight: 600;
@@ -96,18 +218,46 @@
     margin-bottom: 8px;
     border-bottom: 1px solid #e2e8f0;
 }
-.evidence-title.supporting { color: #38a169; }
-.evidence-title.opposing { color: #e53e3e; }
-.evidence-title.conclusion { color: #4a5568; margin-top: 16px; }
 
-.evidence-list { display: flex; flex-direction: column; gap: 10px; }
-.no-evidence { font-size: 13px; color: #a0aec0; font-style: italic; }
+.evidence-title.supporting {
+    color: #38a169;
+}
+
+.evidence-title.opposing {
+    color: #e53e3e;
+}
+
+.evidence-title.fact-checking {
+    color: #4f46e5;
+}
+
+.evidence-title.conclusion {
+    color: #4a5568;
+    margin-top: 16px;
+}
+
+.evidence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.no-evidence {
+    font-size: 13px;
+    color: #a0aec0;
+    font-style: italic;
+}
+
 .evidence-item {
     font-size: 13px;
     line-height: 1.5;
     color: #4a5568;
 }
-.evidence-summary { margin-bottom: 4px; }
+
+.evidence-summary {
+    margin-bottom: 4px;
+}
+
 .evidence-source {
     font-size: 12px;
     font-weight: 500;
@@ -115,9 +265,50 @@
     text-decoration: none;
     word-break: break-all;
 }
-.evidence-source:hover { text-decoration: underline; }
 
-.claim-conclusion-section { margin-top: 12px; }
+.evidence-source:hover {
+    text-decoration: underline;
+}
+
+/* --- Fact-Checking Results Styles --- */
+.fact-check-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.fact-check-item {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #4a5568;
+    background-color: #eef2ff;
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 3px solid #4f46e5;
+}
+
+.fact-check-inference {
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #2d3748;
+}
+
+.fact-check-source {
+    font-size: 12px;
+    font-weight: 500;
+    color: #4f46e5;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.fact-check-source:hover {
+    text-decoration: underline;
+}
+
+.claim-conclusion-section {
+    margin-top: 12px;
+}
+
 .claim-conclusion-text {
     font-size: 14px;
     line-height: 1.6;
@@ -127,3 +318,176 @@
     border-radius: 6px;
 }
 
+/* --- Source Credibility Section Styles --- */
+.credibility-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.credibility-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.credibility-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.credibility-card {
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px;
+}
+
+.credibility-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 10px;
+}
+
+.credibility-url {
+    font-size: 13px;
+    font-weight: 500;
+    color: #4f46e5;
+    text-decoration: none;
+    word-break: break-all;
+    flex: 1;
+}
+
+.credibility-url:hover {
+    text-decoration: underline;
+}
+
+.credibility-score-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.credibility-score {
+    font-size: 18px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background-color: #edf2f7;
+    min-width: 45px;
+    text-align: center;
+}
+
+.credibility-score.score-high {
+    color: #38a169;
+    background-color: #c6f6d5;
+}
+
+.credibility-score.score-medium-high {
+    color: #4299e1;
+    background-color: #bee3f8;
+}
+
+.credibility-score.score-medium-low {
+    color: #ed8936;
+    background-color: #feebc8;
+}
+
+.credibility-score.score-low {
+    color: #e53e3e;
+    background-color: #fed7d7;
+}
+
+.credibility-category {
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.category-highly-credible,
+.category-high-credibility {
+    background-color: #c6f6d5;
+    color: #2f855a;
+}
+
+.category-moderate,
+.category-moderate-credibility {
+    background-color: #bee3f8;
+    color: #2c5282;
+}
+
+.category-low-credibility,
+.category-questionable {
+    background-color: #feebc8;
+    color: #b7791f;
+}
+
+.category-unreliable {
+    background-color: #fed7d7;
+    color: #c53030;
+}
+
+.credibility-details {
+    margin-top: 10px;
+}
+
+.credibility-flags {
+    margin-bottom: 10px;
+}
+
+.credibility-flags-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 4px;
+}
+
+.credibility-flags-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.credibility-flags-list li {
+    font-size: 12px;
+    color: #4a5568;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.6;
+}
+
+.credibility-flags-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #38a169;
+    font-weight: 600;
+}
+
+.credibility-reasoning {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #2d3748;
+    background-color: #edf2f7;
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 3px solid #4f46e5;
+}
+
+.no-credibility {
+    font-size: 13px;
+    color: #a0aec0;
+    font-style: italic;
+    text-align: center;
+    padding: 16px 0;
+}
