@@ -74,11 +74,11 @@ export default function TrendsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0f111a] text-gray-300 p-6 font-sans">
+    <div className="min-h-screen bg-[#0f111a] text-gray-300 p-4 md:p-6 font-sans">
       <div className="max-w-6xl mx-auto space-y-6">
 
         {/* Header */}
-        <div className="flex justify-between items-end border-b border-gray-800 pb-4">
+        <div className="flex flex-col gap-4 border-b border-gray-800 pb-4 md:flex-row md:items-end md:justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white tracking-tight">Topic Trends</h1>
             <p className="text-gray-500 text-sm mt-1">Real-time frequency of reported misinformation topics</p>

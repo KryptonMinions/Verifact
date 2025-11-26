@@ -12,6 +12,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 
 interface SiteHeaderProps {
@@ -25,10 +26,14 @@ export function SiteHeader({ user }: SiteHeaderProps) {
     return (
         <header
             className={cn(
-                "flex h-14 items-center justify-end border-b px-6 transition-all duration-300",
+                "flex h-14 items-center justify-between border-b px-6 transition-all duration-300",
                 "bg-[#050505]/80 backdrop-blur-xl border-neon-blue/10 text-gray-100 shadow-[0_1px_20px_rgba(0,243,255,0.05)]"
             )}
         >
+            <div className="flex items-center gap-4">
+                <SidebarTrigger className="md:hidden" />
+            </div>
+
             {user ? (
                 <UserNav user={user} />
             ) : (
