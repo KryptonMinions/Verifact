@@ -11,7 +11,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { X, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Report, AnalyzedClaim, Evidence, FactCheckResult } from '@/types';
+import { Report, AnalyzedClaim, Evidence, FactCheckResult, AnalysisResult } from '@/types';
+import { ShareButton } from '../dashboard/share-button';
+import { generatePDFFromAnalysisResult } from '@/utils/pdf-generator-generic';
+import { Download } from 'lucide-react';
 
 interface ReportModalProps {
     report: Report;
@@ -80,6 +83,13 @@ export function ReportModal({ report, onClose }: ReportModalProps) {
         })
         : 'No date available';
 
+    // Convert Report to AnalysisResult format for sharing
+    const analysisResult: AnalysisResult = {
+        analyzed_claims: report.analyzed_claims,
+        tag: simpleVerdict,
+        overall_summary: fullConclusion
+    };
+
     return (
         <Dialog open={true} onOpenChange={onClose}>
             <DialogContent
@@ -99,6 +109,27 @@ export function ReportModal({ report, onClose }: ReportModalProps) {
                     <span className='sr-only'>Close</span>
                 </button>
 
+                {/* Action Buttons Container */}
+                <div className="absolute right-16 top-4 z-10 flex items-center gap-2">
+                    {/* Share Button */}
+                    <ShareButton
+                        result={analysisResult}
+                        variant="outline"
+                        size="sm"
+                        className="gap-2 bg-neon-blue/20 hover:bg-neon-blue/30 border border-neon-blue/50 text-neon-blue backdrop-blur-sm"
+                    />
+
+                    {/* PDF Download Button */}
+                    <button
+                        onClick={() => generatePDFFromAnalysisResult(analysisResult, report.id)}
+                        className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none flex items-center gap-2 px-3 py-2 bg-neon-blue/20 hover:bg-neon-blue/30 border border-neon-blue/50 text-neon-blue backdrop-blur-sm"
+                        title="Download PDF Report"
+                    >
+                        <Download className="h-4 w-4" />
+                        <span className="text-xs font-medium">PDF</span>
+                    </button>
+                </div>
+
                 <DialogHeader className='p-8 pb-4 space-y-4'>
                     <div className='flex items-start justify-between gap-4 pr-12'>
                         <Badge
@@ -110,11 +141,6 @@ export function ReportModal({ report, onClose }: ReportModalProps) {
                         >
                             {simpleVerdict}
                         </Badge>
-                        <div className='text-right'>
-                            <div className='text-sm text-gray-400'>
-                                {formattedDate}
-                            </div>
-                        </div>
                     </div>
 
                     <DialogTitle className='text-2xl font-bold leading-tight tracking-tight text-gray-100 pr-12'>

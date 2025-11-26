@@ -23,6 +23,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { ShareButton } from './share-button';
+import { generatePDFFromAnalysisResult } from '@/utils/pdf-generator-generic';
+import { Download } from 'lucide-react';
 
 type AnalysisResultsProps = {
   result: AnalysisResult;
@@ -168,13 +170,26 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
                 </div>
               </div>
 
-              {/* Share button */}
-              <ShareButton
-                result={result}
-                variant="outline"
-                size="default"
-                className="border-gray-700/50 bg-[#252837]/80 backdrop-blur-sm hover:bg-blue-600/30 hover:border-blue-500/50 transition-all duration-300"
-              />
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2">
+                {/* Share button */}
+                <ShareButton
+                  result={result}
+                  variant="outline"
+                  size="default"
+                  className="border-gray-700/50 bg-[#252837]/80 backdrop-blur-sm hover:bg-blue-600/30 hover:border-blue-500/50 transition-all duration-300"
+                />
+
+                {/* PDF Download button */}
+                <button
+                  onClick={() => generatePDFFromAnalysisResult(result)}
+                  className="inline-flex items-center gap-2 rounded-md border border-gray-700/50 bg-[#252837]/80 px-4 py-2 text-sm font-medium backdrop-blur-sm transition-all duration-300 hover:bg-blue-600/30 hover:border-blue-500/50"
+                  title="Download PDF Report"
+                >
+                  <Download className="h-4 w-4" />
+                  <span>PDF</span>
+                </button>
+              </div>
             </div>
 
             {/* Divider */}

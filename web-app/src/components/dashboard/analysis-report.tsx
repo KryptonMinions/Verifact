@@ -26,6 +26,9 @@ import type { AnalysisResult, AnalyzedClaim, FactCheckResult, Evidence } from '@
 import { Badge } from '../ui/badge';
 import { cn } from '@/lib/utils';
 import { ReverseImageTimeline } from './reverse-image-timeline';
+import { ShareButton } from './share-button';
+import { generatePDFFromAnalysisResult } from '@/utils/pdf-generator-generic';
+import { Download } from 'lucide-react';
 
 type AnalysisReportProps = {
   analysis: any;
@@ -180,9 +183,22 @@ Timeline of Appearances (oldest first):
           </h3>
           <Card className={cn('transition-colors', tagInfo.className)}>
             <CardContent className="p-6">
-              <div className="mb-4 flex items-center justify-between">
-                <h4 className="font-semibold">{getTitle()}</h4>
-                <Badge variant={tagInfo.variant}>{tag}</Badge>
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <h4 className="font-semibold">{getTitle()}</h4>
+                  <Badge variant={tagInfo.variant}>{tag}</Badge>
+                </div>
+                <div className="flex items-center gap-2">
+                  <ShareButton result={analysis_details} variant="outline" size="sm" className="border-gray-700 bg-[#252837] hover:bg-blue-600/20" />
+                  <button
+                    onClick={() => generatePDFFromAnalysisResult(analysis_details, analysis.id)}
+                    className="inline-flex items-center gap-2 rounded-md border border-gray-700 bg-[#252837] px-3 py-1.5 text-xs font-medium transition-colors hover:bg-blue-600/20"
+                    title="Download PDF Report"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    <span>PDF</span>
+                  </button>
+                </div>
               </div>
               <p className="mt-1 text-sm text-muted-foreground">
                 Date: {new Date(created_at).toLocaleDateString()}
