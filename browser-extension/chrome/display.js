@@ -99,11 +99,19 @@ function displayResultModal(data) {
             return '';
         }
 
-        const resultsHtml = factCheckResults.map((fc, index) => `
+        // Filter out invalid fact-checks (matching web app behavior)
+        const validFactChecks = factCheckResults.filter(fc => fc.url && fc.url !== 'None');
+
+        if (validFactChecks.length === 0) {
+            return '';
+        }
+
+        const resultsHtml = validFactChecks.map((fc, index) => `
             <div class="fact-check-item">
-                <p class="fact-check-inference">${fc.inference}</p>
+                <p class="fact-check-source-name">${fc.source || 'Fact-Check Source'}</p>
+                <p class="fact-check-summary">${fc.summary || fc.inference || 'No summary available.'}</p>
                 <a href="${fc.url}" target="_blank" class="fact-check-source">
-                    Fact-Check Source [${index + 1}]
+                    View Source
                 </a>
             </div>
         `).join('');
@@ -117,6 +125,7 @@ function displayResultModal(data) {
             </div>
         `;
     };
+
 
     /**
      * Helper to create the HTML for source credibility summary.

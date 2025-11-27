@@ -287,10 +287,16 @@
     border-left: 3px solid #4f46e5;
 }
 
-.fact-check-inference {
-    margin-bottom: 6px;
-    font-weight: 500;
+.fact-check-source-name {
+    margin-bottom: 4px;
+    font-weight: 600;
     color: #2d3748;
+    font-size: 14px;
+}
+
+.fact-check-summary {
+    margin-bottom: 6px;
+    color: #4a5568;
 }
 
 .fact-check-source {
