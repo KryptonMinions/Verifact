@@ -32,7 +32,7 @@ type AnalysisResultsProps = {
 };
 
 export function AnalysisResults({ result }: AnalysisResultsProps) {
-  const { analyzed_claims, tag, overall_summary, source_credibility_summary } = result;
+  const { analyzed_claims, tag, overall_summary, source_credibility_summary, source } = result;
 
   const getClaimIcon = (conclusion: string) => {
     const lowerCaseConclusion = conclusion.toLowerCase();
@@ -214,6 +214,12 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
               <p className="text-base leading-relaxed text-gray-100/90">
                 {overall_summary}
               </p>
+              {source && (
+                <div className="mt-4 flex items-center gap-2 text-sm text-gray-400">
+                  <span className="font-medium uppercase tracking-wide">Source:</span>
+                  <span className="text-gray-300">{source}</span>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>

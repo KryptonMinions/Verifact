@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { X, ExternalLink, ChevronDown, ChevronUp, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { X, ExternalLink, ChevronDown, ChevronUp, ShieldCheck, CheckCircle2, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Report, AnalyzedClaim, Evidence, FactCheckResult, AnalysisResult } from '@/types';
 import { ShareButton } from '../dashboard/share-button';
@@ -94,7 +94,8 @@ export function ReportModal({ report, onClose }: ReportModalProps) {
     const analysisResult: AnalysisResult = {
         analyzed_claims: report.analyzed_claims,
         tag: simpleVerdict,
-        overall_summary: fullConclusion
+        overall_summary: fullConclusion,
+        source: report.source
     };
 
     return (
@@ -154,8 +155,14 @@ export function ReportModal({ report, onClose }: ReportModalProps) {
                         "{firstClaimText}"
                     </DialogTitle>
 
-                    <div className='text-sm text-gray-400 font-mono'>
-                        {report.analyzed_claims.length} Claim{report.analyzed_claims.length !== 1 ? 's' : ''} Analyzed
+                    <div className='text-sm text-gray-400 font-mono flex items-center gap-4'>
+                        <span>{report.analyzed_claims.length} Claim{report.analyzed_claims.length !== 1 ? 's' : ''} Analyzed</span>
+                        {report.source && (
+                            <div className="flex items-center gap-1.5 text-blue-400">
+                                <Globe className="w-3.5 h-3.5" />
+                                <span>{report.source}</span>
+                            </div>
+                        )}
                     </div>
                 </DialogHeader>
 

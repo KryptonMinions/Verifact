@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { Shield, XCircle, AlertCircle, ExternalLink, BarChart3 } from 'lucide-react';
+import { Shield, XCircle, AlertCircle, ExternalLink, BarChart3, Globe } from 'lucide-react';
 
 interface TrendingCardProps {
   trend: any;
@@ -31,7 +31,11 @@ export default function TrendingCard({ trend, onCardClick }: TrendingCardProps) 
 
     const firstEvidence = summary.analyzed_claims?.[0]?.web_evidence?.supporting?.[0] ||
       summary.analyzed_claims?.[0]?.web_evidence?.opposing?.[0];
-    if (firstEvidence?.source) {
+
+    // Prioritize explicit source field, then fallback to evidence URL hostname
+    if (summary.source) {
+      source = summary.source;
+    } else if (firstEvidence?.source) {
       try {
         source = new URL(firstEvidence.source).hostname;
       } catch {
@@ -104,10 +108,10 @@ export default function TrendingCard({ trend, onCardClick }: TrendingCardProps) 
         <div className={cn('h-[2px] mb-4 opacity-60', lineColor)} />
 
         {/* Metadata row with icons */}
-        <div className='flex items-center justify-between text-xs font-mono mt-auto'>
-          <div className={cn('flex items-center gap-1.5', iconColor)}>
-            <ExternalLink className='w-3.5 h-3.5' />
-            <span className='text-gray-400'>{source}</span>
+        <div className='flex items-center justify-between gap-3 text-xs font-mono mt-auto'>
+          <div className={cn('flex items-center gap-1.5 min-w-0 flex-1', iconColor)}>
+            {summary?.source ? <Globe className='w-3.5 h-3.5 flex-shrink-0' /> : <ExternalLink className='w-3.5 h-3.5 flex-shrink-0' />}
+            <span className='text-gray-400 truncate' title={source}>{source}</span>
           </div>
           <div className={cn('flex items-center gap-1.5', iconColor)}>
             <BarChart3 className='w-3.5 h-3.5' />

@@ -8,7 +8,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Report } from '@/types';
-import { Shield, XCircle, AlertCircle, Calendar, FileText } from 'lucide-react';
+import { Shield, XCircle, AlertCircle, Calendar, FileText, Globe } from 'lucide-react';
 
 interface ReportCardProps {
     report: Report;
@@ -107,9 +107,16 @@ export default function ReportCard({ report, onCardClick }: ReportCardProps) {
 
             <CardContent className='flex-grow flex flex-col justify-between px-5 pb-5 pt-0'>
                 {/* Main claim text */}
-                <h3 className='font-bold leading-snug tracking-tight mb-4 text-gray-50 text-lg drop-shadow-md line-clamp-3'>
+                <h3 className='font-bold leading-snug tracking-tight mb-3 text-gray-50 text-lg drop-shadow-md line-clamp-3'>
                     {claimText}
                 </h3>
+
+                {/* Summary display */}
+                {report.summary && (
+                    <p className='text-sm text-gray-400 leading-relaxed line-clamp-2 mb-4'>
+                        {report.summary}
+                    </p>
+                )}
 
                 {/* Accent line separator */}
                 <div className={cn('h-[2px] mb-4 opacity-60', lineColor)} />
@@ -127,6 +134,16 @@ export default function ReportCard({ report, onCardClick }: ReportCardProps) {
                         </span>
                     </div>
                 </div>
+
+                {/* Source display */}
+                {report.source && (
+                    <div className='flex items-center gap-1.5 text-xs font-mono mt-3 pt-3 border-t border-white/5'>
+                        <Globe className={cn('w-3.5 h-3.5', iconColor)} />
+                        <span className='text-gray-400 truncate max-w-full' title={report.source}>
+                            {report.source}
+                        </span>
+                    </div>
+                )}
             </CardContent>
         </Card>
     );

@@ -61,6 +61,8 @@ export default function ReportsPage() {
                                     timestamp: data.timestamp || null,
                                     analyzed_claims: data.analyzed_claims,
                                     source_credibility_summary: data.source_credibility_summary,
+                                    source: data.source || data.source_input || null,
+                                    summary: data.summary || null,
                                 });
                             }
                         });

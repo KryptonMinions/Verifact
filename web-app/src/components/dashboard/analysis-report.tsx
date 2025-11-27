@@ -37,7 +37,7 @@ type AnalysisReportProps = {
 
 export function AnalysisReport({ analysis }: AnalysisReportProps) {
   const { analysis_details, text_input, url_input, created_at } = analysis;
-  const { analyzed_claims, tag, overall_summary, reverse_image_search_data, source_credibility_summary }: AnalysisResult =
+  const { analyzed_claims, tag, overall_summary, reverse_image_search_data, source_credibility_summary, source }: AnalysisResult =
     analysis_details;
 
   const getTitle = () => {
@@ -233,6 +233,12 @@ Timeline of Appearances (oldest first):
               </div>
               <p className="mt-1 text-sm text-muted-foreground">
                 Date: {new Date(created_at).toLocaleDateString()}
+                {source && (
+                  <>
+                    <span className="mx-2">•</span>
+                    Source: {source}
+                  </>
+                )}
               </p>
               <Separator className="my-4" />
               <p className="text-base leading-relaxed">{overall_summary}</p>

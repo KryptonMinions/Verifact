@@ -71,7 +71,7 @@ export function TrendingCardModal({ trend, onClose }: TrendingCardModalProps) {
                     "p-0"
                 )}
             >
-                {/* Action Buttons Container */}
+                {/* Action Buttons Container - positioned to the left of close button */}
                 {summary && !summary.error && (
                     <div className="absolute right-16 top-4 z-10 flex items-center gap-2">
                         {/* Share Button */}
@@ -97,31 +97,31 @@ export function TrendingCardModal({ trend, onClose }: TrendingCardModalProps) {
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-10"
+                    className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none z-10"
                 >
                     <X className="h-6 w-6 text-gray-300 hover:text-white" />
                     <span className="sr-only">Close</span>
                 </button>
 
                 <DialogHeader className="p-8 pb-4 space-y-4">
-                    <div className="flex items-start justify-between gap-4 pr-8">
-                        <Badge
-                            variant="outline"
-                            className={cn(
-                                "uppercase tracking-widest font-mono text-sm px-4 py-2",
-                                badgeClass
-                            )}
-                        >
-                            {verdict}
-                        </Badge>
-                        <div className="text-right">
-                            <div className="text-sm text-gray-400">
-                                {trend.topic_count} reports
+                    <div className="flex items-start justify-between gap-4 pr-24">
+                        <div className="flex items-center gap-3">
+                            <Badge
+                                variant="outline"
+                                className={cn(
+                                    "uppercase tracking-widest font-mono text-sm px-4 py-2",
+                                    badgeClass
+                                )}
+                            >
+                                {verdict}
+                            </Badge>
+                            <div className="text-sm text-gray-400 font-mono">
+                                {trend.topic_count} report{trend.topic_count !== 1 ? 's' : ''}
                             </div>
                         </div>
                     </div>
 
-                    <DialogTitle className="text-3xl font-bold leading-tight tracking-tight text-gray-100 pr-8">
+                    <DialogTitle className="text-3xl font-bold leading-tight tracking-tight text-gray-100 pr-24">
                         {firstClaimText}
                     </DialogTitle>
 

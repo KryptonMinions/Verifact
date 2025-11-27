@@ -42,6 +42,7 @@ export type AnalysisResult = {
   overall_summary: string;
   reverse_image_search_data?: ReverseImageSearchData;
   source_credibility_summary?: SourceCredibility[];
+  source?: string;
 };
 
 export type SharePlatform = 'x' | 'reddit' | 'linkedin' | 'whatsapp' | 'telegram' | 'email' | 'native';
@@ -59,4 +60,6 @@ export type Report = {
   timestamp: string | null;
   analyzed_claims: AnalyzedClaim[];
   source_credibility_summary?: SourceCredibility[];
+  source?: string;
+  summary?: string;
 };
