@@ -331,7 +331,12 @@ interface EvidenceSectionProps {
 }
 
 function EvidenceSection({ title, items, colorClass, type }: EvidenceSectionProps) {
-    if (!items || items.length === 0) {
+    // Filter out items with 'None' URLs for fact-checking results
+    const validItems = type === 'factcheck'
+        ? (items as FactCheckResult[]).filter(item => item.url && item.url !== 'None')
+        : items;
+
+    if (!validItems || validItems.length === 0) {
         return (
             <div>
                 <h4 className={cn('text-xs font-bold mb-2 opacity-50 uppercase', colorClass)}>
@@ -347,17 +352,17 @@ function EvidenceSection({ title, items, colorClass, type }: EvidenceSectionProp
     return (
         <div>
             <h4 className={cn('text-xs font-bold mb-2 uppercase border-b border-gray-700 pb-1', colorClass)}>
-                {title} ({items.length})
+                {title} ({validItems.length})
             </h4>
             <div className='bg-[#1a1d2d] p-3 rounded border border-gray-800 max-h-60 overflow-y-auto space-y-3'>
-                {items.map((item, idx) => {
+                {validItems.map((item, idx) => {
                     const summary = type === 'factcheck' ? (item as FactCheckResult).summary : (item as Evidence).summary;
                     const linkUrl = type === 'factcheck' ? (item as FactCheckResult).url : (item as Evidence).source;
 
                     return (
                         <div key={idx} className='pb-3 border-b border-gray-800 last:border-0 last:pb-0'>
                             <p className='text-xs text-gray-300 mb-1 leading-relaxed'>{summary}</p>
-                            {linkUrl && (
+                            {linkUrl && linkUrl !== 'None' && (
                                 <a
                                     href={linkUrl}
                                     target='_blank'

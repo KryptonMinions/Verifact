@@ -297,24 +297,25 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
                   </div>
                 )}
 
-                {claim.fact_checking_results?.length > 0 && (
-                  <div className="space-y-4">
-                    <h4 className="flex items-center gap-2 font-semibold text-muted-foreground">
-                      <BookCheck className="size-4" />
-                      Fact-Checking Results
-                    </h4>
+                {(() => {
+                  const validFactChecks = claim.fact_checking_results?.filter(fc => fc.url && fc.url !== 'None') || [];
+                  return validFactChecks.length > 0 && (
                     <div className="space-y-4">
-                      {claim.fact_checking_results.map(
-                        (fc: FactCheckResult, fcIndex: number) => (
-                          <div
-                            key={fcIndex}
-                            className="rounded-md border bg-muted/30 p-4"
-                          >
-                            <p className="font-semibold">{fc.source}</p>
-                            <p className="mt-1 text-sm text-muted-foreground">
-                              {fc.summary}
-                            </p>
-                            {fc.url && (
+                      <h4 className="flex items-center gap-2 font-semibold text-muted-foreground">
+                        <BookCheck className="size-4" />
+                        Fact-Checking Results
+                      </h4>
+                      <div className="space-y-4">
+                        {validFactChecks.map(
+                          (fc: FactCheckResult, fcIndex: number) => (
+                            <div
+                              key={fcIndex}
+                              className="rounded-md border bg-muted/30 p-4"
+                            >
+                              <p className="font-semibold">{fc.source}</p>
+                              <p className="mt-1 text-sm text-muted-foreground">
+                                {fc.summary}
+                              </p>
                               <a
                                 href={fc.url}
                                 target="_blank"
@@ -324,13 +325,13 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
                                 <LinkIcon className="size-3" />
                                 View Source
                               </a>
-                            )}
-                          </div>
-                        )
-                      )}
+                            </div>
+                          )
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
               </CardContent>
             </Card>
           ))}

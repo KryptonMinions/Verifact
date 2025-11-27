@@ -5,10 +5,11 @@ import { Card, CardContent } from '@/components/ui/card';
 
 const EvidenceItem = ({ source, summary }: { source?: string, summary?: string }) => {
     // Defensively check if `source` is a valid string to prevent runtime errors.
-    if (typeof source !== 'string' || !source) {
+    // Also filter out 'None' which is returned by the API when no URL is available
+    if (typeof source !== 'string' || !source || source === 'None') {
         // If no source is available, just render the summary if it exists.
         return summary ? (
-             <Card className="bg-gray-800/50 border-gray-700">
+            <Card className="bg-gray-800/50 border-gray-700">
                 <CardContent className="p-3">
                     <p className="text-sm text-gray-300">"{summary}"</p>
                 </CardContent>
@@ -78,24 +79,27 @@ export default function RawJsonView({ summary }: { summary: any }) {
                                 <ThumbsDown className="size-4" />
                                 Opposing Evidence
                             </h5>
-                             <div className="space-y-3 pl-6">
+                            <div className="space-y-3 pl-6">
                                 {claim.opposing_evidence.map((ev: any, i: number) => <EvidenceItem key={`opp-${i}`} {...ev} />)}
                             </div>
                         </div>
                     )}
-                    
+
                     {/* Fact Checking */}
-                    {claim.fact_checking_results?.length > 0 && (
-                         <div className="space-y-3">
-                            <h5 className="flex items-center gap-2 font-semibold text-blue-400">
-                                <BookCheck className="size-4" />
-                                Fact-Checking Results
-                            </h5>
-                             <div className="space-y-3 pl-6">
-                                {claim.fact_checking_results.map((fc: any, i: number) => <EvidenceItem key={`fc-${i}`} source={fc.url} summary={fc.summary} />)}
+                    {(() => {
+                        const validFactChecks = claim.fact_checking_results?.filter((fc: any) => fc.url && fc.url !== 'None') || [];
+                        return validFactChecks.length > 0 && (
+                            <div className="space-y-3">
+                                <h5 className="flex items-center gap-2 font-semibold text-blue-400">
+                                    <BookCheck className="size-4" />
+                                    Fact-Checking Results
+                                </h5>
+                                <div className="space-y-3 pl-6">
+                                    {validFactChecks.map((fc: any, i: number) => <EvidenceItem key={`fc-${i}`} source={fc.url} summary={fc.summary} />)}
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        );
+                    })()}
 
                 </div>
             ))}
