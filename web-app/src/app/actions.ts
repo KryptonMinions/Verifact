@@ -36,9 +36,7 @@ export async function handleTextAnalysis(
   }
 
   const { text, url, media, source } = validatedFields.data;
-  const claimToTest = [text, url].filter(Boolean).join(' ');
-
-  if (!claimToTest && (!media || media.size === 0)) {
+  if (!text && !url && (!media || media.size === 0)) {
     return {
       result: null,
       error: 'Please provide text, a URL, or a media file to analyze.',
@@ -58,9 +56,12 @@ export async function handleTextAnalysis(
   try {
     const apiFormData = new FormData();
 
-    // Only append text if it's not empty
-    if (claimToTest) {
-      apiFormData.append('text', claimToTest);
+    if (text) {
+      apiFormData.append('text', text);
+    }
+
+    if (url) {
+      apiFormData.append('url', url);
     }
 
     if (media && media.size > 0) {
@@ -73,7 +74,8 @@ export async function handleTextAnalysis(
     }
 
     console.log(`▶️  Sending POST request to: ${analysisApiUrl}`);
-    console.log(`▶️  Claim: "${claimToTest}"`);
+    if (text) console.log(`▶️  Text: "${text}"`);
+    if (url) console.log(`▶️  URL: "${url}"`);
 
     // Create AbortController with timeout for long-running image analysis
     const controller = new AbortController();
