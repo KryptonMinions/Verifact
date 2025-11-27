@@ -4,6 +4,7 @@
 import { forwardRef } from 'react';
 import type { AnalysisResult } from '@/types';
 import { AnalysisResults } from './analysis-results';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
 import { FileQuestion, Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -22,6 +23,7 @@ export const AnalysisResultsContainer = forwardRef<
   let content;
 
   if (isPending) {
+    // ... (keep existing loading state)
     content = (
       <MotionCard
         key="loading"
@@ -54,6 +56,7 @@ export const AnalysisResultsContainer = forwardRef<
       </motion.div>
     );
   } else {
+    // ... (keep existing placeholder state)
     content = (
       <MotionCard
         key="placeholder"
@@ -78,7 +81,9 @@ export const AnalysisResultsContainer = forwardRef<
 
   return (
     <div ref={ref} className="h-full">
-      <AnimatePresence mode="wait">{content}</AnimatePresence>
+      <ScrollArea className="h-full pr-4">
+        <AnimatePresence mode="wait">{content}</AnimatePresence>
+      </ScrollArea>
     </div>
   );
 });
