@@ -6,14 +6,17 @@ import { Button } from '../ui/button';
 import { useRef, useState, useEffect } from 'react';
 import { FilePreview } from './file-preview';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 type FileUploadProps = {
   file: File | null;
   setFile: (file: File | null, sourceUrl?: string) => void;
   name: string;
+  maxSize?: number; // in bytes, default 50MB
 };
 
-export function FileUpload({ file, setFile, name }: FileUploadProps) {
+export function FileUpload({ file, setFile, name, maxSize = 50 * 1024 * 1024 }: FileUploadProps) {
+  const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dataTransferRef = useRef<DataTransfer | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -31,6 +34,16 @@ export function FileUpload({ file, setFile, name }: FileUploadProps) {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
+      if (selectedFile.size > maxSize) {
+        toast({
+          variant: 'destructive',
+          title: 'File too large',
+          description: `File size must be less than ${Math.round(maxSize / (1024 * 1024))}MB`,
+        });
+        // Reset input
+        event.target.value = '';
+        return;
+      }
       setFile(selectedFile);
     } else {
       setFile(null);
@@ -49,6 +62,14 @@ export function FileUpload({ file, setFile, name }: FileUploadProps) {
         if (itemType.indexOf('image') !== -1 || itemType.indexOf('audio') !== -1 || itemType.indexOf('video') !== -1) {
           const pastedFile = items[i].getAsFile();
           if (pastedFile) {
+            if (pastedFile.size > maxSize) {
+              toast({
+                variant: 'destructive',
+                title: 'File too large',
+                description: `File size must be less than ${Math.round(maxSize / (1024 * 1024))}MB`,
+              });
+              return;
+            }
             const sourceUrl = event.clipboardData.getData('text/html').match(/src="([^"]+)"/)?.[1];
             setFile(pastedFile, sourceUrl);
             event.preventDefault();
@@ -78,7 +99,17 @@ export function FileUpload({ file, setFile, name }: FileUploadProps) {
     e.stopPropagation();
     setIsDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      setFile(e.dataTransfer.files[0]);
+      const droppedFile = e.dataTransfer.files[0];
+      if (droppedFile.size > maxSize) {
+        toast({
+          variant: 'destructive',
+          title: 'File too large',
+          description: `File size must be less than ${Math.round(maxSize / (1024 * 1024))}MB`,
+        });
+        e.dataTransfer.clearData();
+        return;
+      }
+      setFile(droppedFile);
       e.dataTransfer.clearData();
     }
   };

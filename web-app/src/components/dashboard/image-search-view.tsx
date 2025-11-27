@@ -54,7 +54,7 @@ export function ImageSearchView() {
                                     name="media"
                                 />
                                 <p className="text-xs text-muted-foreground">
-                                    Supported formats: JPG, PNG, WEBP. Max size: 10MB.
+                                    Supported formats: JPG, PNG, WEBP. Max size: 50MB.
                                 </p>
                             </div>
 
