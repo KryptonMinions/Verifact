@@ -284,17 +284,21 @@ Timeline of Appearances (oldest first):
                       </h4>
                       <div className="space-y-4">
                         {claim.supporting_evidence.map((evidence: Evidence, evIndex: number) => (
-                          <div key={evIndex} className="rounded-md border bg-muted/30 p-4">
+                          <div key={evIndex} className="rounded-md border bg-muted/30 p-4 space-y-3">
                             <p className="text-sm text-muted-foreground">{evidence.summary}</p>
-                            <a
-                              href={evidence.source}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="mt-2 inline-flex items-center gap-1 text-sm text-primary underline-offset-4 hover:underline"
-                            >
-                              <LinkIcon className="size-3" />
-                              View Source
-                            </a>
+                            <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                              <a
+                                href={evidence.source}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-start gap-2 text-sm text-primary hover:text-primary/80 transition-colors group"
+                              >
+                                <LinkIcon className="size-4 flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                                <span className="break-all underline underline-offset-4">
+                                  {evidence.source}
+                                </span>
+                              </a>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -309,17 +313,21 @@ Timeline of Appearances (oldest first):
                       </h4>
                       <div className="space-y-4">
                         {claim.opposing_evidence.map((evidence: Evidence, evIndex: number) => (
-                          <div key={evIndex} className="rounded-md border bg-muted/30 p-4">
+                          <div key={evIndex} className="rounded-md border bg-muted/30 p-4 space-y-3">
                             <p className="text-sm text-muted-foreground">{evidence.summary}</p>
-                            <a
-                              href={evidence.source}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="mt-2 inline-flex items-center gap-1 text-sm text-primary underline-offset-4 hover:underline"
-                            >
-                              <LinkIcon className="size-3" />
-                              View Source
-                            </a>
+                            <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                              <a
+                                href={evidence.source}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-start gap-2 text-sm text-primary hover:text-primary/80 transition-colors group"
+                              >
+                                <LinkIcon className="size-4 flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                                <span className="break-all underline underline-offset-4">
+                                  {evidence.source}
+                                </span>
+                              </a>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -339,21 +347,25 @@ Timeline of Appearances (oldest first):
                             (fc: FactCheckResult, fcIndex: number) => (
                               <div
                                 key={fcIndex}
-                                className="rounded-md border bg-muted/30 p-4"
+                                className="rounded-md border bg-muted/30 p-4 space-y-3"
                               >
                                 <p className="font-semibold">{fc.source}</p>
                                 <p className="mt-1 text-sm text-muted-foreground">
                                   {fc.summary}
                                 </p>
-                                <a
-                                  href={fc.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="mt-2 inline-flex items-center gap-1 text-sm text-primary underline-offset-4 hover:underline"
-                                >
-                                  <LinkIcon className="size-3" />
-                                  View Source
-                                </a>
+                                <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                                  <a
+                                    href={fc.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-start gap-2 text-sm text-primary hover:text-primary/80 transition-colors group"
+                                  >
+                                    <LinkIcon className="size-4 flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                                    <span className="break-all underline underline-offset-4">
+                                      {fc.url}
+                                    </span>
+                                  </a>
+                                </div>
                               </div>
                             )
                           )}

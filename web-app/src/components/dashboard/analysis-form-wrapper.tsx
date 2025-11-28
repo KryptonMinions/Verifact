@@ -56,8 +56,8 @@ export function AnalysisFormWrapper() {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-8 lg:h-[calc(100vh-12rem)]">
-      <div className="w-full lg:overflow-y-auto lg:pr-4 custom-scrollbar">
+    <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-8">
+      <div className="w-full">
         <AnimatePresence mode="wait">
           {showTimeline && showResult?.reverse_image_search_data ? (
             <motion.div
@@ -89,7 +89,7 @@ export function AnalysisFormWrapper() {
           )}
         </AnimatePresence>
       </div>
-      <div className="w-full h-full lg:overflow-hidden">
+      <div className="w-full">
         <AnalysisResultsContainer result={showResult} isPending={isPending} ref={resultRef} />
       </div>
     </div>
