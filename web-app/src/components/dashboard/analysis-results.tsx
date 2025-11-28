@@ -258,7 +258,7 @@ export function AnalysisResults({ result, reportId }: AnalysisResultsProps) {
                       {claim.supporting_evidence.map((evidence: Evidence, evIndex: number) => (
                         <div key={evIndex} className="rounded-md border bg-muted/30 p-4 space-y-3">
                           <p className="text-sm text-muted-foreground">{evidence.summary}</p>
-                          <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                          <div className="">
                             <a
                               href={evidence.source}
                               target="_blank"
@@ -266,8 +266,8 @@ export function AnalysisResults({ result, reportId }: AnalysisResultsProps) {
                               className="inline-flex items-start gap-2 text-sm text-primary hover:text-primary/80 transition-colors group"
                             >
                               <LinkIcon className="size-4 flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                              <span className="break-all underline underline-offset-4">
-                                {evidence.source}
+                              <span className="underline underline-offset-4">
+                                View Source
                               </span>
                             </a>
                           </div>
@@ -287,7 +287,7 @@ export function AnalysisResults({ result, reportId }: AnalysisResultsProps) {
                       {claim.opposing_evidence.map((evidence: Evidence, evIndex: number) => (
                         <div key={evIndex} className="rounded-md border bg-muted/30 p-4 space-y-3">
                           <p className="text-sm text-muted-foreground">{evidence.summary}</p>
-                          <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                          <div className="">
                             <a
                               href={evidence.source}
                               target="_blank"
@@ -295,8 +295,8 @@ export function AnalysisResults({ result, reportId }: AnalysisResultsProps) {
                               className="inline-flex items-start gap-2 text-sm text-primary hover:text-primary/80 transition-colors group"
                             >
                               <LinkIcon className="size-4 flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                              <span className="break-all underline underline-offset-4">
-                                {evidence.source}
+                              <span className="underline underline-offset-4">
+                                View Source
                               </span>
                             </a>
                           </div>
@@ -325,7 +325,7 @@ export function AnalysisResults({ result, reportId }: AnalysisResultsProps) {
                               <p className="mt-1 text-sm text-muted-foreground">
                                 {fc.summary}
                               </p>
-                              <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                              <div className="">
                                 <a
                                   href={fc.url}
                                   target="_blank"
@@ -333,8 +333,8 @@ export function AnalysisResults({ result, reportId }: AnalysisResultsProps) {
                                   className="inline-flex items-start gap-2 text-sm text-primary hover:text-primary/80 transition-colors group"
                                 >
                                   <LinkIcon className="size-4 flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                                  <span className="break-all underline underline-offset-4">
-                                    {fc.url}
+                                  <span className="underline underline-offset-4">
+                                    View Source
                                   </span>
                                 </a>
                               </div>
