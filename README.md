@@ -1,145 +1,93 @@
-# VeriFact: Misinformation Analysis App
+# Verifact
 
-**Last Updated:** September 21, 2025  
+Verifact is an advanced AI-powered misinformation analysis tool designed to help users verify the authenticity of content across the web. It provides comprehensive analysis of text, URLs, and images, offering detailed reports on source credibility, fact-checking results, and potential biases.
 
-[![Cloud Run](https://img.shields.io/badge/Deployed%20on-Google%20Cloud%20Run-blue?logo=googlecloud)](https://cloud.google.com/run)  
----
+## Features
 
-## 1. Overview  
+-   **Multi-Modal Analysis**: Analyze text content, URLs, and images for misinformation.
+-   **Source Credibility Assessment**: Evaluate the reliability of information sources using a robust scoring system.
+-   **Automated Fact-Checking**: Cross-reference claims against a database of verified fact-checks.
+-   **Browser Extension**: Real-time analysis directly within your browser.
+-   **Dashboard & Reports**: detailed history of analyses and downloadable PDF reports.
+-   **Reverse Image Search**: Track the origin and spread of images online.
 
-VeriFact is an advanced **AI-powered misinformation detection pipeline** that deconstructs, analyzes, and verifies claims from text, URLs, and images. It empowers journalists, researchers, and the public by delivering **structured, evidence-based reports** on the truthfulness of digital content.  
+## Source Credibility Heuristics
 
-At its core, VeriFact leverages a **multi-agent workflow**, where specialized AI agents collaborate to extract claims, research evidence, check against trusted fact-check databases, and generate a comprehensive verdict.
+Verifact employs a multi-faceted approach to evaluate source credibility, assigning a score from 0 to 100. This score is derived from a combination of automated analysis and historical data.
 
----
+### Scoring System
 
-## 2. Key Features  
+The credibility score maps to four distinct categories:
 
-- **Multi-Modal Input:** Analyze **raw text**, **URLs**, or **images** (e.g., social media screenshots).  
-- **Automated Claim Deconstruction:** Identifies verifiable claims from messy, unstructured content.  
-- **Concurrent Research:** Performs **parallel web search** and **fact-check database lookups**.  
-- **Structured Reporting:** Provides verdict tags (`True`, `False`, `Misleading`, `Unverified`) with transparent evidence trails.  
-- **Serverless & Scalable:** Runs on **Google Cloud Run** for auto-scaling, cost-efficiency, and reliability.  
+-   **High Credibility (80-100)**: Sources with a strong track record of factual reporting and high journalistic standards.
+-   **Medium-High Credibility (60-79)**: Generally reliable sources that may have minor issues with bias or transparency.
+-   **Medium-Low Credibility (40-59)**: Sources with mixed reliability, often containing significant bias or unverified claims.
+-   **Low Credibility (0-39)**: Sources known for spreading misinformation, propaganda, or lacking factual integrity.
 
----
+### Evaluation Factors
 
-## 3. System Architecture: The Agentic Pipeline  
+Our heuristics consider the following key factors:
 
-The pipeline is built around **specialized AI agents**, each handling a specific task in the misinformation analysis workflow.  
+1.  **Domain Reputation**:
+    *   Historical accuracy of the domain.
+    *   Presence on known lists of reliable or unreliable sources.
+    *   Longevity and stability of the web presence.
 
-### Architecture Diagram  
+2.  **Factual Reporting**:
+    *   Adherence to journalistic standards (e.g., sourcing, corrections policy).
+    *   Frequency of failed fact-checks by independent organizations.
+    *   Distinction between news and opinion content.
 
-![Architecture Diagram](https://github.com/Tanav-Kolar/RAG_Baiters_Misinformation_GenAI_Exchange_Hack/blob/main/Architecture_Diagram.png?raw=true)
----
+3.  **Bias & Objectivity**:
+    *   Analysis of language for emotional manipulation or extreme partisan bias.
+    *   Detection of logical fallacies or misleading framing.
 
-### Agent Breakdown  
+4.  **Trust Indicators (Flags)**:
+    *   **Transparency**: Clear ownership and funding information.
+    *   **Satire**: Identification of satirical content that might be mistaken for news.
+    *   **User Generated**: Distinction between editorial content and user-generated platforms.
 
-#### 1. `claims_extractor_agent`  
-- **Purpose:** Extracts verifiable claims from text, URLs, or images.  
-- **Tools:**  
-  - `ScraperAPI` for webpage parsing.  
-  - **OCR engine** for extracting text from images (Base64).  
-- **Output:** Structured list of claims.  
+## Tech Stack
 
-#### 2. `web_scraper_agent`  
-- **Purpose:** Finds real-time **supporting** and **opposing** evidence for claims.  
-- **Tool:** Google Search API.  
-- **Output:** Evidence snippets grouped by polarity.  
+-   **Frontend**: Next.js 14 (App Router), React, TypeScript
+-   **Styling**: Tailwind CSS, Shadcn UI
+-   **Browser Extension**: Vanilla JavaScript, Chrome Extension Manifest V3
+-   **PDF Generation**: jsPDF
 
-#### 3. `fact_checking_agent`  
-- **Purpose:** Validates claims against trusted fact-check repositories.  
-- **Tool:** Google Fact Check API.  
-- **Output:** Matching fact-checks with verdicts and sources.  
+## Getting Started
 
-#### 4. `report_generator_agent`  
-- **Purpose:** Synthesizes results from research agents into a **cohesive JSON report**.  
-- **Output:** Final structured verdict + evidence.  
+### Prerequisites
 
----
+-   Node.js (v18 or higher)
+-   npm or yarn
 
-## 4. Output: Analysis Report  
+### Installation
 
-The pipeline produces a structured JSON object for easy integration with a frontend or dashboard.  
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/KryptonMinions/Verifact.git
+    cd Verifact
+    ```
 
-**Example Output:**  
+2.  Install dependencies for the web app:
+    ```bash
+    cd web-app
+    npm install
+    ```
 
-```json
-{
-  "overall_summary": "The claim that all petrol bunks in Vellore will stop accepting cash from Sept 22nd is False. No official sources corroborate this, and it appears to be a recycled hoax.",
-  "claims": [
-    {
-      "claim_text": "All petrol bunks in Vellore will stop accepting cash payments.",
-      "verdict_tag": "False",
-      "web_evidence": {
-        "supporting": [],
-        "opposing": [
-          {
-            "source": "thehindu.com",
-            "snippet": "The All India Petroleum Dealers Association clarified that cash remains valid at all member bunks nationwide."
-          }
-        ]
-      },
-      "fact_check_info": {
-        "source": "Reuters Fact Check",
-        "summary": "A similar claim about forced UPI adoption in 2024 was rated 'False'."
-      }
-    }
-  ]
-}
-````
+3.  Run the development server:
+    ```bash
+    npm run dev
+    ```
 
----
+4.  Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 5. Deployment
+### Browser Extension Setup
 
-VeriFact is deployed on **Google Cloud Run** for maximum scalability and zero-infrastructure overhead.
+1.  Open Chrome and navigate to `chrome://extensions/`.
+2.  Enable "Developer mode" in the top right corner.
+3.  Click "Load unpacked" and select the `browser-extension` directory from the project.
 
-### Why Cloud Run?
+## License
 
-✅ Auto-scaling to zero (no idle cost).
-✅ Fully managed infrastructure.
-✅ Pay-per-use billing.
-
-### Deployment Workflow
-
-1. **Containerize the app:**
-
-   ```bash
-   docker build -t REGION-docker.pkg.dev/PROJECT-ID/verifact/verifact-service:latest .
-   ```
-
-2. **Push to Artifact Registry:**
-
-   ```bash
-   gcloud auth configure-docker REGION-docker.pkg.dev
-   docker push REGION-docker.pkg.dev/PROJECT-ID/verifact/verifact-service:latest
-   ```
-
-3. **Deploy to Cloud Run:**
-
-   ```bash
-   gcloud run deploy verifact-service \
-     --image REGION-docker.pkg.dev/PROJECT-ID/verifact/verifact-service:latest \
-     --platform managed \
-     --region YOUR_REGION \
-     --allow-unauthenticated \
-     --set-env-vars="GOOGLE_API_KEY=your_key,SCRAPER_API_KEY=your_key"
-   ```
-
----
-
-## 7. Roadmap
-
-* [ ] Add **dashboard with analytics** on misinformation trends.
-* [ ] Integrate **source credibility scoring** for evidence.
-* [ ] Support **multilingual fact-checking**.
-* [ ] Provide **bias/fallacy detection module** for claims.
-
----
-
-## 8. Contributors
-
-👤 **Shreyansh Kumar Nayak** 
-👤 **Tanav Kolar** 
-
-
+[MIT](LICENSE)
