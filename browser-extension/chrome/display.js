@@ -15,8 +15,11 @@ function displayLoadingState() {
     const modal = document.createElement('div');
     modal.id = 'verifact-loading-modal';
     modal.className = 'verifact-modal';
+
+    const iconUrl = chrome.runtime.getURL('icons/loading-icon.png');
+
     modal.innerHTML = `
-        <div class="loader"></div>
+        <img src="${iconUrl}" class="loading-icon" alt="Loading...">
         <span class="loading-text">Analyzing content...</span>
     `;
     document.body.appendChild(modal);
