@@ -29,9 +29,10 @@ import { Download } from 'lucide-react';
 
 type AnalysisResultsProps = {
   result: AnalysisResult;
+  reportId?: string;
 };
 
-export function AnalysisResults({ result }: AnalysisResultsProps) {
+export function AnalysisResults({ result, reportId }: AnalysisResultsProps) {
   const { analyzed_claims, tag, overall_summary, source_credibility_summary, source } = result;
 
   const getClaimIcon = (conclusion: string) => {
@@ -190,7 +191,7 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
 
                 {/* PDF Download button */}
                 <button
-                  onClick={() => generatePDFFromAnalysisResult(result)}
+                  onClick={() => generatePDFFromAnalysisResult(result, reportId)}
                   className="inline-flex items-center gap-2 rounded-md border border-gray-700/50 bg-[#252837]/80 px-4 py-2 text-sm font-medium backdrop-blur-sm transition-all duration-300 hover:bg-blue-600/30 hover:border-blue-500/50"
                   title="Download PDF Report"
                 >

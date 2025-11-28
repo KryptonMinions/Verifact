@@ -57,27 +57,25 @@ export default async function DashboardPage({
         </DashboardItem>
 
         <DashboardItem>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Card className="bg-[#1a1d2d] border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-gray-400">Total Analyses</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-white">{history.length}</div>
-                <p className="text-xs text-gray-500">
-                  Total analyses performed
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </DashboardItem>
-
-        <DashboardItem>
-          <div className="grid flex-1 grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="bg-[#1a1d2d]/50 backdrop-blur-sm rounded-xl border border-white/5 p-4">
-              <HistoryList history={history} selectedId={selectedId} />
+          <div className="grid flex-1 grid-cols-1 gap-8 md:grid-cols-3 items-start lg:h-[calc(100vh-16rem)]">
+            <div className="flex flex-col gap-4 lg:overflow-y-auto lg:pr-4 custom-scrollbar">
+              <Card className="bg-[#1a1d2d] border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-400">Total Analyses</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-white">{history.length}</div>
+                  <p className="text-xs text-gray-500">
+                    Total analyses performed
+                  </p>
+                </CardContent>
+              </Card>
+              <div className="bg-[#1a1d2d]/50 backdrop-blur-sm rounded-xl border border-white/5 p-4">
+                <HistoryList history={history} selectedId={selectedId} />
+              </div>
             </div>
-            <div className="flex flex-col gap-6 md:col-span-2">
+
+            <div className="flex flex-col gap-6 md:col-span-2 h-full lg:overflow-y-auto lg:pl-4 custom-scrollbar">
               {selectedAnalysis ? (
                 <AnalysisReportWrapper analysis={selectedAnalysis} />
               ) : (

@@ -49,7 +49,15 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
     if (url_input) {
       return url_input;
     }
-    return 'Image Analysis';
+    // For image analysis, use first claim text or tag
+    if (analyzed_claims && analyzed_claims.length > 0) {
+      const firstClaim = analyzed_claims[0].claim_text;
+      return firstClaim.length > 60
+        ? `${firstClaim.substring(0, 60)}...`
+        : firstClaim;
+    }
+    // Fallback to tag if no claims available
+    return tag || 'Analysis Report';
   };
 
   const getClaimIcon = (conclusion: string) => {

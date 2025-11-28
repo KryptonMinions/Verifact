@@ -1,7 +1,7 @@
 import jsPDF from 'jspdf';
 import type { AnalysisResult } from '@/types';
 
-export function generatePDFFromAnalysisResult(result: AnalysisResult, reportId?: string) {
+export function generatePDFFromAnalysisResult(result: AnalysisResult, reportId?: string | number) {
     const doc = new jsPDF();
 
     // Color Palette
@@ -406,7 +406,7 @@ export function generatePDFFromAnalysisResult(result: AnalysisResult, reportId?:
     // Save the PDF
     const timestamp = new Date().getTime();
     const filename = reportId
-        ? `verifact-report-${reportId.substring(0, 8)}.pdf`
+        ? `verifact-report-${String(reportId).substring(0, 8)}.pdf`
         : `verifact-report-${timestamp}.pdf`;
     doc.save(filename);
 }

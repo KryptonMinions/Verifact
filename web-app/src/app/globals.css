@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,13 +5,16 @@
 @layer base {
   :root {
     /* Deep Dark Theme (Default) */
-    --background: 229 27% 8%; /* #0f111a */
+    --background: 229 27% 8%;
+    /* #0f111a */
     --foreground: 210 40% 98%;
-    --card: 230 27% 14%; /* #1a1d2d */
+    --card: 230 27% 14%;
+    /* #1a1d2d */
     --card-foreground: 210 40% 98%;
     --popover: 229 27% 8%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%; /* Neon Blue #3b82f6 */
+    --primary: 217 91% 60%;
+    /* Neon Blue #3b82f6 */
     --primary-foreground: 222.1 84% 4.9%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -31,14 +33,18 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    
+
     /* Sidebar Specifics */
-    --sidebar-background: 229 27% 8%; /* Match main bg */
+    --sidebar-background: 229 27% 8%;
+    /* Match main bg */
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 217 91% 60%; /* Neon Blue */
+    --sidebar-primary: 217 91% 60%;
+    /* Neon Blue */
     --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 230 27% 14%; /* Slightly lighter for hover */
-    --sidebar-accent-foreground: 217 91% 60%; /* Neon Blue text on hover */
+    --sidebar-accent: 230 27% 14%;
+    /* Slightly lighter for hover */
+    --sidebar-accent-foreground: 217 91% 60%;
+    /* Neon Blue text on hover */
     --sidebar-border: 217.2 32.6% 17.5%;
     --sidebar-ring: 217 91% 60%;
   }
@@ -79,7 +85,30 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Custom scrollbar styling */
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.3);
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.5);
   }
 }
