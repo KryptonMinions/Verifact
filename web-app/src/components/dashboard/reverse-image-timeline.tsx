@@ -13,10 +13,9 @@ type ReverseImageTimelineProps = {
 };
 
 export function ReverseImageTimeline({ data, onCollapse }: ReverseImageTimelineProps) {
-    // Get the 5 oldest entries and sort them oldest-first
-    const oldestLinks = [...data.matched_links]
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-        .slice(0, 5);
+    // Get all entries and sort them oldest-first
+    const sortedLinks = [...data.matched_links]
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     const formatDate = (dateString: string) => {
         try {
@@ -57,16 +56,16 @@ export function ReverseImageTimeline({ data, onCollapse }: ReverseImageTimelineP
                 )}
 
                 {/* Timeline */}
-                {oldestLinks.length > 0 ? (
+                {sortedLinks.length > 0 ? (
                     <div className="space-y-1">
                         <h4 className="mb-4 font-semibold text-sm">
-                            Earliest Appearances (oldest first)
+                            Timeline of Appearances (oldest first)
                         </h4>
                         <div className="relative space-y-6 pl-6">
                             {/* Vertical timeline line */}
                             <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-border" />
 
-                            {oldestLinks.map((link, index) => (
+                            {sortedLinks.map((link, index) => (
                                 <div key={index} className="relative">
                                     {/* Timeline dot */}
                                     <div className="absolute -left-6 top-1 size-4 rounded-full border-2 border-primary bg-background" />
